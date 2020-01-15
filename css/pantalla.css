@@ -1,0 +1,70 @@
+.screen {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+}
+
+.selector-box {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.showcase {
+	overflow-y: scroll;
+}
+
+.showcase::-webkit-scrollbar {
+  display: none;
+}
+
+.table {
+	background-color: #eee;
+	border-spacing: 0;
+	border-collapse: initial;
+}
+
+.table img {
+	width: 25px;
+	height: 25px;
+}
+
+.sticky {
+	position: sticky;
+	top: 0;
+	margin: 0;
+	background-color: #eee;
+}
+
+.form-showcase {
+	width: 100%;
+	height: 100%;
+	padding: 2rem 2rem;	
+}
+
+.new-form {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: flex-start;
+	height: 100%;
+}
+
+form[name=new-theme] {
+	flex-direction: column;
+	align-items: center;
+	flex-wrap: nowrap;
+	height: auto;
+}
+
+.btn-submit {
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	margin-bottom: 0;
+}
+
+.btn-submit input[type=submit] {
+	margin-top: 1.85rem;
+	flex: .5;
+}
