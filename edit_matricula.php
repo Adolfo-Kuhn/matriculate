@@ -14,7 +14,7 @@ try {
 		if (strcmp($_POST['alumno_mat'], '-') !== 0) {
 			$alumno = $_POST['alumno_mat'];
 			$tabla = 'Matrícula';
-			$selector = obtenerLabeledSelect('alumno', 'Alumno', SQL_BORRAR_MATRICULA_1, $alumno);
+			$selector = obtenerLabeledSelect('alumno_mat', 'Alumno', SQL_BORRAR_MATRICULA_1, $alumno);
 			if (isset($_REQUEST['asignatura'])) {
 				if (strcmp($_POST['asignatura'], '-') !== 0) {
 					$asignaturaTxt = $_POST['asignaturaTxt'];
@@ -134,7 +134,6 @@ try {
 							<div class="form-group col-5">
 								<label for='repetidor'>Repetidor</label>
 								<select class='custom-select' id='repetidor' name='repetidor'>
-									<option value='-'>Seleccione opción...</option>
 									<option value='0'>No</option>
 									<option value='1'>Si</option>
 								</select>

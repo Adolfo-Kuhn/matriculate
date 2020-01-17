@@ -21,11 +21,11 @@ try {
 				$action = './edit_alumno.php';
 				break;
 			case 'asignatura':
-				$selector = obtenerLabeledSelect('asignatura', 'Asignatura', $sql);
+				$selector = obtenerLabeledSelect('asignatura', 'Asignatura', SQL_CREAR_MATRICULA);
 				$action = './edit_asignatura.php';
 				break;
 			case 'ciclo':
-				$selector = obtenerLabeledSelect('ciclo', 'Ciclo', $sql);
+				$selector = obtenerLabeledSelect('ciclo', 'Ciclo', SQL_CREAR_ASIGNATURA_1);
 				$action = './edit_ciclo.php';
 				break;
 			case 'matrícula':
@@ -33,7 +33,7 @@ try {
 				$action = 'modificar.php';
 				break;
 			case 'profesor':
-				$selector = obtenerLabeledSelect('profesor', 'Profesor', $sql);
+				$selector = obtenerLabeledSelect('profesor', 'Profesor', SQL_CREAR_ASIGNATURA_2);
 				$action = './edit_profesor.php';
 				break;
 		}
@@ -130,6 +130,8 @@ try {
 											<?php echo $selector2 ?>
 											<input type='hidden' name='asignaturaTxt'>
 										<?php endif; ?>
+									<?php else: ?>
+											<?php echo $selector ?>											
 									<?php endif; ?>
 									<button type="submit" class="btn btn-success">Modificar</button>
 								</form>
