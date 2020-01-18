@@ -1,30 +1,36 @@
 <?php
 require_once './data/funciones.inc.php';
 
-session_start(['cookie_lifetime' => (60 * 60 * 24 * 180)]);
+session_start(['cookie_lifetime' => (60 * 60 * 24 * 90)]);
 
 if (isset($_SESSION['user'])) {
 	$logged = true;
+	$user = $_SESSION['user'];
+	$visitas = $_SESSION[$user]['visitas'];
+	$inicio = $_SESSION[$user]['inicio'];
 } else {
 	if (isset($_POST['entrar'])) {
 		try {
 			if (logUser($_POST['user'], password_hash($_POST['pass'], 1))) {
 				$logged = true;
-				if (isset($_SESSION['user'])) {
-					$_SESSION['visitas'] += 1;
-					$_SESSION['inicio'] = getDateTime();
+				$user = $_POST['user'];
+				if (isset($_COOKIE[$user])) {
+					$visitas = $_COOKIE[$user . '_visitas'] + 1;
+					setcookie($user . '_visitas', $visitas, time() + (60 * 60 * 24 * 90));
 				} else {
-					$_SESSION['user'] = $_POST['user'];
-					$_SESSION['visitas'] = 1;
-					$_SESSION['inicio'] = getDateTime();
+					$visitas = 1;
+					setcookie($user, $user, time() + (60 * 60 * 24 * 90));
+					setcookie($user . '_visitas', $visitas, time() + (60 * 60 * 24 * 90));
 				}
+				$_SESSION['user'] = $user;
+				$_SESSION[$user]['visitas'] = $visitas;
+				$_SESSION[$user]['inicio'] = getDateTime();
 			}
 		} catch (Exception $e) {
 			$exc = getAlertElement($e, 'danger');
 		}
 	}
 }
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -46,7 +52,7 @@ if (isset($_SESSION['user'])) {
 				<div class='header__titulo'>
 					<span class='header__titulo-txt'>IES Linus Torvalds</span>
 					<?php if (isset($logged)): ?>
-						<span class='header__titulo-id__logged'><?= $_SESSION['user'] ?></span>
+						<span class='header__titulo-id__logged'><?= $user ?></span>
 					<?php else: ?>
 						<span class='header__titulo-id'>Iniciar Sesión</span>
 					<?php endif; ?>
@@ -55,7 +61,7 @@ if (isset($_SESSION['user'])) {
 			<main class='main'>
 				<?php
 				if (isset($logged)) {
-					if (strcmp($_SESSION['user'], 'admin') === 0) {
+					if (strcmp($user, 'admin') === 0) {
 						include_once './components/nav_admin.inc.php';
 					} else {
 						include_once './components/nav_user.inc.php';

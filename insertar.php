@@ -9,6 +9,8 @@ try {
 	// si no usuario identificado se redirecciona al inicio 
 	if (!isset($_SESSION['user'])) {
 		header('location: index.php');
+	} else {
+		$user = $_SESSION['user'];
 	}
 	// si se ha seleccionado una tabla en la que insertar
 	if (isset($_REQUEST['tabla'])) {
@@ -125,12 +127,12 @@ try {
 				<div class='header__logo'>Matricúl<mark class='logo-end'>Ate</mark></div>
 				<div class='header__titulo'>
 					<span class='header__titulo-txt'>IES Linus Torvalds</span>
-					<span class='header__titulo-id__logged'><?= $_SESSION['user'] ?></span>
+					<span class='header__titulo-id__logged'><?= $user ?></span>
 				</div>
 			</header>
 			<main class='main'>
 				<?php
-				if (strcmp($_SESSION['user'], 'admin') === 0) {
+				if (strcmp($user, 'admin') === 0) {
 					include_once './components/nav_admin.inc.php';
 				} else {
 					include_once './components/nav_user.inc.php';

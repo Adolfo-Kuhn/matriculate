@@ -3,7 +3,7 @@
  * La segunda palabra en el identificador de la constante representa el fichero en el que se
  * utiliza, aunque en algunos casos estas constantes se pueden usar en mśa de un fichero */
 
-const SQL_LEER_ASIGNATURA_1 = 'select idAsignatura, nombre from asignatura order by nombre';
+const SQL_LEER_ASIGNATURA_1 = 'select idAsignatura, nombre from asignatura order by 2';
 const SQL_LEER_ALUMNO = 'select dni, apellidos, nombre, fecha_nacimiento from alumno';
 const SQL_LEER_ASIGNATURA_2 = <<<'SQL'
 select asignatura.nombre, ciclo.siglas, asignatura.curso,
@@ -53,7 +53,7 @@ SQL;
 const SQL_MODCICLO_1 = "select nombre, siglas, urlLogotipo from ciclo where idCiclo = ?";
 const SQL_MODCICLO_2 = "update ciclo set nombre = ?, siglas = ?, urlLogotipo = ? where idCiclo = ?";
 
-const SQL_MODMATRICULA_ALUMNOS = "select dni, concat(apellidos, ', ', nombre)  from alumno inner join matricula on dni = dniAlumno";
+const SQL_MODMATRICULA_ALUMNOS = "select dni, concat(apellidos, ', ', nombre) from alumno inner join matricula on dni = dniAlumno";
 const SQL_MODMATRICULA = "select idAsignatura, asignatura.nombre from matricula natural join asignatura where dniAlumno = ";
 const SQL_MODMATRICULA_1 = <<<'SQL'
 select repetidor, notaFinal from matricula where dniAlumno = ? and idAsignatura = ?

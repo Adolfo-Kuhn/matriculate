@@ -245,7 +245,7 @@ div[role=alert] {
 }
 
 .breadcrumb {
-	margin-bottom: 0;
+	margin-bottom: .5rem;
 }
 
 .logo-block {

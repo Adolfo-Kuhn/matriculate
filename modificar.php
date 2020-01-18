@@ -9,6 +9,8 @@ try {
 	// si no hay sesión iniciada se redirecciona al inicio
 	if (!isset($_SESSION['user'])) {
 		header('location: index.php');
+	} else {
+		$user = $_SESSION['user'];
 	}
 	// si se ha enviado el valor de la tabla sobre la que actuar
 	if (isset($_REQUEST['tabla'])) {
@@ -21,7 +23,7 @@ try {
 				$action = './edit_alumno.php';
 				break;
 			case 'asignatura':
-				$selector = obtenerLabeledSelect('asignatura', 'Asignatura', SQL_CREAR_MATRICULA);
+				$selector = obtenerLabeledSelect('asignatura', 'Asignatura', SQL_LEER_ASIGNATURA_1);
 				$action = './edit_asignatura.php';
 				break;
 			case 'ciclo':
@@ -37,9 +39,11 @@ try {
 				$action = './edit_profesor.php';
 				break;
 		}
+		$hiddenTabla = strtolower($tabla);
 	}
 	if (isset($_REQUEST['alumno_mat'])) {
 		if (strcmp($_POST['alumno_mat'], '-') !== 0) {
+			$alumno = $_POST['alumno_mat'];
 			if (isset($_POST['alumnoTxt'])) {
 				$alumnoTxt = $_POST['alumnoTxt'];
 			}
@@ -51,7 +55,7 @@ try {
 		}
 	}
 } catch (Exception $e) {
-	$exc = getAlertElement($e, 'warning');
+	$exc = getAlertElement($e, 'danger');
 }
 ?>
 <!DOCTYPE html>
@@ -69,7 +73,7 @@ try {
 				<div class='header__logo'>Matricúl<mark class='logo-end'>Ate</mark></div>
 				<div class='header__titulo'>
 					<span class='header__titulo-txt'>IES Linus Torvalds</span>
-					<span class='header__titulo-id__logged'><?= $_SESSION['user'] ?></span>
+					<span class='header__titulo-id__logged'><?= $user ?></span>
 				</div>
 			</header>
 			<main class='main'>
@@ -120,7 +124,7 @@ try {
 													<label class="input-group-text" for="selec-tabla1">Alumno</label>
 												</div>
 											</div>
-											<input type='hidden' name='alumno_mat' value='<?= $_POST['alumno_mat'] ?>'>
+											<input type='hidden' name='alumno_mat' value='<?= $alumno ?>'>
 											<input type='hidden' name='alumnoTxt' value='<?= $alumnoTxt ?>'>
 										<?php else: ?>
 											<?php echo $selector ?>
@@ -131,7 +135,8 @@ try {
 											<input type='hidden' name='asignaturaTxt'>
 										<?php endif; ?>
 									<?php else: ?>
-											<?php echo $selector ?>											
+										<?php echo $selector ?>
+										<input type='hidden' name='<?= $hiddenTabla ?>Txt'>
 									<?php endif; ?>
 									<button type="submit" class="btn btn-success">Modificar</button>
 								</form>
@@ -141,6 +146,6 @@ try {
 				</article>
 			</main>
         </div>
-		<script src="./js/edit_matricula.js"></script>
+		<script src="./js/editar.js"></script>
     </body>
 </html>

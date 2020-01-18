@@ -9,10 +9,13 @@ try {
 
 	if (!isset($_SESSION['user'])) {
 		header('location: index.php');
+	} else {
+		$user = $_SESSION['user'];
 	}
 	if (isset($_REQUEST['alumno_mat'])) {
 		if (strcmp($_POST['alumno_mat'], '-') !== 0) {
 			$alumno = $_POST['alumno_mat'];
+			$alumnoTxt = $_POST['alumnoTxt'];
 			$tabla = 'Matrícula';
 			$selector = obtenerLabeledSelect('alumno_mat', 'Alumno', SQL_BORRAR_MATRICULA_1, $alumno);
 			if (isset($_REQUEST['asignatura'])) {
@@ -20,12 +23,9 @@ try {
 					$asignaturaTxt = $_POST['asignaturaTxt'];
 				} else {
 					$respuesta = getAlertElement('Es obligatorio indicar la asignatura matriculada.', 'warning');
-				}				
+				}
 			}
 		}
-	}
-	if (isset($_REQUEST['cancel_mod_mat'])) {
-		header('location: ./modificar.php');
 	}
 	if (isset($_REQUEST['mod_mat_info'])) {
 		$dniAntiguo = $_POST['idAlumno'];
@@ -67,12 +67,12 @@ try {
 				<div class='header__logo'>Matricúl<mark class='logo-end'>Ate</mark></div>
 				<div class='header__titulo'>
 					<span class='header__titulo-txt'>IES Linus Torvalds</span>
-					<span class='header__titulo-id__logged'><?= $_SESSION['user'] ?></span>
+					<span class='header__titulo-id__logged'><?= $user ?></span>
 				</div>
 			</header>
 			<main class='main'>
 				<?php
-				if (strcmp($_SESSION['user'], 'admin') === 0) {
+				if (strcmp($user, 'admin') === 0) {
 					include_once './components/nav_admin.inc.php';
 				} else {
 					include_once './components/nav_user.inc.php';
@@ -88,7 +88,7 @@ try {
 									<li class="breadcrumb-item"><?= $alumnoTxt ?></li>
 									<li class="breadcrumb-item active"><?= $asignaturaTxt ?></li>
 								<?php else: ?>
-									<li class="breadcrumb-item active"><?= $_POST['alumnoTxt'] ?></li>
+									<li class="breadcrumb-item active"><?= $alumnoTxt ?></li>
 								<?php endif; ?>
 							<?php else: ?>
 								<li class="breadcrumb-item active">Matrícula</li>
@@ -125,8 +125,8 @@ try {
 							<?php
 							if (isset($alumno)) {
 								echo obtenerSelect('alumno', 'Alumno', SQL_BORRAR_MATRICULA_1, $alumno);
-								echo "<input type='hidden' name=idAlumno value='$alumno'>";
-								echo "<input type='hidden' name=idAsignatura value='{$_POST['asignatura']}'>";
+								echo "<input type='hidden' name='idAlumno' value='$alumno'>";
+								echo "<input type='hidden' name='idAsignatura' value='{$_POST['asignatura']}'>";
 							} else {
 								echo obtenerSelect('alumno', 'Alumno', SQL_BORRAR_MATRICULA_1);
 							}
@@ -134,8 +134,18 @@ try {
 							<div class="form-group col-5">
 								<label for='repetidor'>Repetidor</label>
 								<select class='custom-select' id='repetidor' name='repetidor'>
-									<option value='0'>No</option>
-									<option value='1'>Si</option>
+									<?php if (isset($repetidor)): ?>
+										<?php if ($repetidor === 0): ?>
+											<option value='0' selected>No</option>
+											<option value='1'>Si</option>
+										<?php else: ?>
+											<option value='0'>No</option>
+											<option value='1' selected>Si</option>
+										<?php endif; ?>
+									<?php else: ?>
+										<option value='0'>No</option>
+										<option value='1' >Si</option>
+									<?php endif; ?>
 								</select>
 							</div>
 							<?php echo obtenerSelect('asignatura', 'Asignatura', SQL_CREAR_MATRICULA, $_POST['asignatura']) ?>
@@ -145,9 +155,6 @@ try {
 							</div>
 							<div class='form-group col-5 btn-submit'>
 								<input type="submit" class="btn btn-info" name="mod_mat_info" value='Aceptar'>
-							</div>
-							<div class='form-group col-5 btn-submit'>
-								<input type="submit" class="btn btn-danger" name="cancel_mod_mat" value='Cancelar'>
 							</div>
 						</form>
 					</main>

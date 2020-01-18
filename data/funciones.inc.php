@@ -117,9 +117,10 @@ function obtenerDatosConsulta($sql) {
  */
 function obtenerLabeledSelect($name, $label, $sql, $selected = '-') {
 	$resultado = obtenerDatosConsulta($sql);
+	$placeholder = strtolower($label);
 	$selector = "<div class='input-group col-5'>"
 			. "<select class='custom-select' name='$name'>"
-			. "<option value='-'>Seleccione $name...</option>";
+			. "<option value='-'>Seleccione $placeholder...</option>";
 	while ($fila = $resultado->fetch_array()) {
 		$convert = ucwords(strtolower($fila[1]));
 		$selector .= "<option value='${fila[0]}'";
