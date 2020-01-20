@@ -6,38 +6,52 @@ try {
 	session_start();
 
 	$tabla = null;
+	// si no hay sesión iniciada se redirecciona al inicio
 	if (!isset($_SESSION['user'])) {
 		header('location: index.php');
+	} else {
+		$user = $_SESSION['user'];
 	}
+	// si se ha enviado el valor de la tabla sobre la que actuar
 	if (isset($_REQUEST['tabla'])) {
 		$tabla = $_POST['tabla'];
+		// en función de la tabla seleccionada
 		switch (strtolower($tabla)) {
+			// se obtiene el desplegable con loa alumnos
 			case 'alumno':
-				$listado = crearCuerpoTabla(CABECERAS_ALUMNO, SQL_LEER_ALUMNO);
+				$selector = obtenerLabeledSelect('alumno', 'Alumno', SQL_BORRAR_MATRICULA_1);
+				$action = './del_alumno.php';
 				break;
 			case 'asignatura':
-				$listado = crearCuerpoTabla(CABECERAS_ASIGNATURA, SQL_LEER_ASIGNATURA_2);
+				$selector = obtenerLabeledSelect('asignatura', 'Asignatura', SQL_LEER_ASIGNATURA_1);
+				$action = './del_asignatura.php';
 				break;
 			case 'ciclo':
-				$listado = crearCuerpoTabla(CABECERAS_CICLO, SQL_LEER_CICLO);
+				$selector = obtenerLabeledSelect('ciclo', 'Ciclo', SQL_CREAR_ASIGNATURA_1);
+				$action = './del_ciclo.php';
 				break;
 			case 'matrícula':
-				$matricula = true;
-				if (isset($_POST['asignatura'])) {
-					if ($_POST['asignatura'] > 0) {
-						$asignatura = $_POST['asignatura'];
-						$txtAsignatura = $_POST['txtAsig'];
-						$selec_matricula = obtenerSelAsignaturas($asignatura);
-						$sql = SQL_LEER_MATRICULA . $asignatura;
-						$listado = crearCuerpoTabla(CABECERAS_MATRICULA, $sql);
-					}
-				} else {
-					$selec_matricula = obtenerSelAsignaturas();
-				}
+				$selector = obtenerLabeledSelect('alumno_mat', 'Alumno', SQL_MODMATRICULA_ALUMNOS);
+				$action = 'eliminar.php';
 				break;
 			case 'profesor':
-				$listado = crearCuerpoTabla(CABECERAS_ALUMNO, SQL_LEER_PROFESOR);
+				$selector = obtenerLabeledSelect('profesor', 'Profesor', SQL_CREAR_ASIGNATURA_2);
+				$action = './del_profesor.php';
 				break;
+		}
+		$hiddenTabla = strtolower($tabla);
+	}
+	if (isset($_REQUEST['alumno_mat'])) {
+		if (strcmp($_POST['alumno_mat'], '-') !== 0) {
+			$alumno = $_POST['alumno_mat'];
+			if (isset($_POST['alumnoTxt'])) {
+				$alumnoTxt = $_POST['alumnoTxt'];
+			}
+			$tabla = 'Matrícula';
+			$selector = obtenerLabeledSelect('alumno_mat', 'Alumno', SQL_BORRAR_MATRICULA_1, $_POST['alumno_mat']);
+			$sql = SQL_MODMATRICULA . "'{$_POST['alumno_mat']}'";
+			$selector2 = obtenerLabeledSelect('asignatura', 'Asignatura', $sql);
+			$action = './del_matricula.php';
 		}
 	}
 } catch (Exception $e) {
@@ -59,7 +73,7 @@ try {
 				<div class='header__logo'>Matricúl<mark class='logo-end'>Ate</mark></div>
 				<div class='header__titulo'>
 					<span class='header__titulo-txt'>IES Linus Torvalds</span>
-					<span class='header__titulo-id__logged'><?= $_SESSION['user'] ?></span>
+					<span class='header__titulo-id__logged'><?= $user ?></span>
 				</div>
 			</header>
 			<main class='main'>
@@ -73,57 +87,64 @@ try {
 				<article class='screen'>
 					<header class='form-header'>
 						<ol class="breadcrumb">
-							<?php echo obtenerBreadcrum('Eliminar', $tabla); ?>
+							<?php if (isset($tabla)): ?>
+								<li class="breadcrumb-item">Eliminar</li>
+								<?php if (strcasecmp($tabla, 'seleccione registro...') !== 0): ?>
+									<?php if (isset($alumnoTxt)): ?>
+										<li class="breadcrumb-item"><?= $tabla ?></li>
+										<li class="breadcrumb-item active"><?= $alumnoTxt ?></li>
+									<?php else: ?>
+										<li class="breadcrumb-item active"><?= $tabla ?></li>
+									<?php endif; ?>
+								<?php endif; ?>
+							<?php else: ?>
+								<li class="breadcrumb-item active">Eliminar</li>
+							<?php endif; ?>
 						</ol>
 						<aside class='container'>
-							<form class='selector-box mb-3' name='consulta' action='consultas.php' method='POST'>
+							<form class='selector-box mb-3' name='consulta' action='eliminar.php' method='POST'>
 								<div class="input-group col-5">
-									<select class="custom-select" id="selec-tabla" name='tabla'>
-										<option>Seleccione registro...</option>
-										<?php if (strcmp($tabla, 'Alumno') === 0): ?>
-											<option value='Alumno' selected>Alumnos</option>
-										<?php else: ?>
-											<option value='Alumno'>Alumnos</option>
-										<?php endif; ?>
-										<?php if (strcmp($tabla, 'Asignatura') === 0): ?>
-											<option value='Asignatura' selected>Asignaturas</option>
-										<?php else: ?>
-											<option value='Asignatura'>Asignaturas</option>
-										<?php endif; ?>
-										<?php if (strcmp($tabla, 'Ciclo') === 0): ?>
-											<option value='Ciclo' selected>Ciclos</option>
-										<?php else: ?>
-											<option value='Ciclo'>Ciclos</option>
-										<?php endif; ?>
-										<?php if (strcmp($tabla, 'Matrícula') === 0): ?>
-											<option value='Matrícula' selected>Matrículas</option>
-										<?php else: ?>
-											<option value='Matrícula'>Matrículas</option>
-										<?php endif; ?>
-										<?php if (strcmp($tabla, 'Profesor') === 0): ?>
-											<option value='Profesor' selected>Profesores</option>
-										<?php else: ?>
-											<option value='Profesor'>Profesores</option>
-										<?php endif; ?>
-									</select>
+									<?php include_once './components/selec-tabla.inc.php'; ?>
 									<div class="input-group-append">
-										<label class="input-group-text" for="selec-tabla">Borrado</label>
+										<label class="input-group-text" for="selec-tabla">Eliminación</label>
 									</div>
 								</div>
-								<?php
-								if (isset($selec_matricula)) {
-									echo $selec_matricula;
-								}
-								?>
 								<button type="submit" class="btn btn-success">Seleccionar</button>
 							</form>
+							<?php if (isset($selector)): ?>
+								<form class='selector-box mb-3' name="<?= 'del-' . $tabla ?>" action="<?= $action ?>" method='POST'>
+									<?php if (strcasecmp($tabla, 'matrícula') === 0): ?>
+										<?php if (isset($alumnoTxt)): ?>
+											<div class="input-group col-5">
+												<select class="custom-select" id="selec-tabla1" disabled>
+													<option><?= $alumnoTxt ?></option>
+												</select>
+												<div class="input-group-append">
+													<label class="input-group-text" for="selec-tabla1">Alumno</label>
+												</div>
+											</div>
+											<input type='hidden' name='alumno_mat' value='<?= $alumno ?>'>
+											<input type='hidden' name='alumnoTxt' value='<?= $alumnoTxt ?>'>
+										<?php else: ?>
+											<?php echo $selector ?>
+											<input type='hidden' name='alumnoTxt'>
+										<?php endif; ?>
+										<?php if (isset($selector2)): ?>
+											<?php echo $selector2 ?>
+											<input type='hidden' name='asignaturaTxt'>
+										<?php endif; ?>
+									<?php else: ?>
+										<?php echo $selector ?>
+										<input type='hidden' name='<?= $hiddenTabla ?>Txt'>
+									<?php endif; ?>
+									<button type="submit" class="btn btn-success">Eliminar</button>
+								</form>
+							<?php endif; ?>
 						</aside>
 					</header>
-					<?php if (isset($listado)): ?>
-						<main class='container showcase'><?= $listado ?></main>
-						<?php endif; ?>
 				</article>
 			</main>
         </div>
+		<script src="./js/editar.js"></script>
     </body>
 </html>

@@ -77,8 +77,8 @@ select dniAlumno, idAsignatura, concat(alumno.nombre, ' ', apellidos, ' (', dni,
 asignatura.nombre from matricula natural join asignatura
 inner join alumno on dniAlumno = dni order by 1
 SQL;
-const SQL_DELALUMNO_1 = "select nombre, apellidos, sexo, dni, fecha_nacimiento from alumno where dni=";
-const SQL_DELALUMNO_2 = "delete from alumno where dni=";
+const SQL_DELALUMNO_1 = "select nombre, apellidos, sexo, dni, fecha_nacimiento from alumno where dni= ";
+const SQL_DELALUMNO_2 = "delete from alumno where dni = ?";
 
 const SQL_DELASIGNATURA_1 = <<<'SQL'
 select nombre, siglas, horasSemana, dniProfesor, idCiclo, curso,
@@ -86,8 +86,8 @@ anho, urlLogotipo from asignatura where idAsignatura=
 SQL;
 const SQL_DELASIGNATURA_2 = "delete from asignatura where idAsignatura=";
 
-const SQL_DELCICLO_1 = "select nombre, siglas, urlLogotipo from ciclo where idCiclo=";
-const SQL_DELCICLO_2 = "delete from ciclo where idCiclo=";
+const SQL_DELCICLO_1 = "select nombre, siglas, urlLogotipo from ciclo where idCiclo = ?";
+const SQL_DELCICLO_2 = "delete from ciclo where idCiclo = ?";
 
 const SQL_DELMATRICULA_1 = <<<'SQL'
 select concat(alumno.nombre, ' ', apellidos) as 'alumno',

@@ -28,25 +28,21 @@ try {
 			$conexion->close();
 		} else {
 			$alumno = '-';
-			$respuesta = getAlertElement('Es necesario que seleccione un/a alumno/a para editar.', 'warning');
+			$respuesta = getAlertElement('Es necesario que seleccione un/a alumno/a para eliminar.', 'warning');
 		}
 	}
 	if (isset($_REQUEST['formulario'])) {
-		$nombre = $_POST['nombre'];
-		$apellido = $_POST['apellido'];
 		$alumno = $_POST['dni'];
-		$fecha = $_POST['fecha'];
-		$sexo = $_POST['sexo'];
 		$conexion = conectarBD();
 		$consulta = $conexion->stmt_init();
-		$consulta->prepare(SQL_MODALUMNO_2);
-		$consulta->bind_param('sssss', $nombre, $apellido, $sexo, $fecha, $alumno);
+		$consulta->prepare(SQL_DELALUMNO_2);
+		$consulta->bind_param('s', $alumno);
 		// se ejecuta la sentencia SQL y se muestra mensaje de éxito o fallo
 		if ($consulta->execute()) {
-			$msg = '<strong>¡Modificación exitosa!</strong> el registro se actualizó correctamente';
+			$msg = '<strong>¡Eliminación exitosa!</strong> el registro se borró correctamente.';
 			$respuesta = getAlertElement($msg, 'success');
 		} else {
-			$msg = "<strong>¡Modificación fallida!</strong> {$conexion->errno} - {$conexion->error}";
+			$msg = "<strong>¡Eliminación fallida!</strong> {$conexion->errno} - {$conexion->error}";
 			$respuesta = getAlertElement($msg, 'warning');
 		}
 		$consulta->close();
@@ -54,7 +50,7 @@ try {
 	}
 	$tabla = 'Alumno';
 	$selector = obtenerLabeledSelect('alumno', 'Alumno', SQL_BORRAR_MATRICULA_1);
-	$action = './edit_alumno.php';
+	$action = './del_alumno.php';
 } catch (Exception $e) {
 	$exc = getAlertElement($e, 'danger');
 }
@@ -88,14 +84,14 @@ try {
 				<article class='screen'>
 					<header class='form-header'>
 						<ol class="breadcrumb">
-							<li class="breadcrumb-item">Modificar</li>
+							<li class="breadcrumb-item">Eliminar</li>
 							<li class="breadcrumb-item">Alumno</li>
 							<?php if (isset($alumnoTxt)): ?>
 								<li class="breadcrumb-item active"><?= $alumnoTxt ?></li>
 							<?php endif; ?>
 						</ol>
 						<aside class='container'>
-							<form class='selector-box mb-3' name='edicion' action='modificar.php' method='POST'>
+							<form class='selector-box mb-3' name='edicion' action='eliminar.php' method='POST'>
 								<div class="input-group col-5">
 									<?php include_once './components/selec-tabla.inc.php'; ?>
 									<div class="input-group-append">
@@ -105,14 +101,14 @@ try {
 								<button type="submit" class="btn btn-success">Seleccionar</button>
 							</form>
 							<?php if (isset($selector)): ?>
-								<form class='selector-box mb-3' name="edit-alumno" action="edit_alumno.php" method='POST'>
+								<form class='selector-box mb-3' name="del-alumno" action="del_alumno.php" method='POST'>
 									<?= $selector; ?>
 									<?php if (isset($alumnoTxt)): ?>
 										<input type='hidden' name='alumnoTxt' value='<?= $alumnoTxt ?>'>
 									<?php else: ?>
 										<input type='hidden' name='alumnoTxt'>
 									<?php endif; ?>
-									<button type="submit" class="btn btn-success">Modificar</button>
+									<button type="submit" class="btn btn-success">Eliminar</button>
 									<input type='hidden' name='tabla' value="<?= $tabla ?>">
 								</form>
 							<?php endif; ?>
@@ -126,34 +122,35 @@ try {
 							die();
 						}
 						?>
-						<form class='new-form' name="mod-alumno" action="edit_alumno.php" method="POST">
+						<form class='new-form' name="del-alumno" action="del_alumno.php" method="POST">
 							<div class="form-group col-5">
 								<label for="nombre">Nombre</label>
-								<input type="text" class="form-control" id="nombre" name="nombre" value="<?= $nombre ?>">
+								<input type="text" class="form-control" id="nombre" name="nombre" value="<?= $nombre ?>" readonly>
 							</div>
 							<div class="form-group col-5">
 								<label for="apellido">Apellidos</label>
-								<input type="text" class="form-control" id="apellido" name="apellido" value="<?= $apellido ?>">
+								<input type="text" class="form-control" id="apellido" name="apellido" value="<?= $apellido ?>" readonly>
 							</div>
 							<div class="form-group col-5">
 								<label for="dni">D.N.I.</label>
-								<input type="text" class="form-control" id="dni" name="dni" value="<?= $dni ?>">
+								<input type="text" class="form-control" id="dni" name="dni" value="<?= $dni ?>" readonly>
 							</div>
 							<div class="form-group col-5">
 								<label for="fecha">Fecha de nacimiento</label>
-								<input type="date" class="form-control" id="fecha" name="fecha" value="<?= $fecha ?>">
+								<input type="date" class="form-control" id="fecha" name="fecha" value="<?= $fecha ?>" readonly>
 							</div>
 							<div class="form-group col-5">
 								<label for="sexo">Sexo</label>
-								<select class="custom-select" id="sexo" name='sexo'>
-									<?php if (strcasecmp($sexo, 'H') === 0): ?>
-										<option value='h' selected>Hombre</option>
-										<option value='m'>Mujer</option>
-									<?php else: ?>
-										<option value='h'>Hombre</option>
-										<option value='m' selected>Mujer</option>
-									<?php endif; ?>
-								</select>
+									<?php if (strcasecmp($sexo, 'H') === 0) {
+										$valor = 'H';
+										$texto = 'Hombre';
+									} else {
+										$valor = 'M';
+										$texto = 'Mujer';
+									}
+									?>
+								<input type="text" class="form-control" id="sexo" value="<?= $texto ?>" readonly>
+								<input type="hidden" name="sexo" value="<?= $valor ?>">
 							</div>
 							<div class='form-group col-5 btn-submit'>
 								<input type="submit" class="btn btn-info" value='Aceptar'>

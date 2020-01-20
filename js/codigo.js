@@ -12,7 +12,7 @@ function inicio() {
 		document.querySelector('#selec-matricula').addEventListener('change',
 			fillInput);
 	}
-	if (document.querySelector('.alert')) {
+	if (document.querySelector('.close')) {
 		document.querySelector('.close').addEventListener('click', closeAlert);
 		delayCloseAlert();
 	}
@@ -79,8 +79,8 @@ function fillInput() {
 }
 
 function closeAlert() {
-	let cajon = document.querySelector('.form-showcase');
-	cajon.removeChild(cajon.firstElementChild);
+	let elemento = document.querySelector('.close').parentElement;
+	elemento.parentElement.removeChild(elemento);
 }
 
 function delayCloseAlert() {

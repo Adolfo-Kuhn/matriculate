@@ -292,14 +292,14 @@ function consultaInsertar_5($sql, $array) {
  * @see obtenerDatosConsulta.
  */
 function obtenerIdMaximo($campo, $tabla) {
-    try {
-        $sql = "select max($campo) from $tabla";
-        $datos = obtenerDatosConsulta($sql);
-        $fila = $datos->fetch_array();
-        return $fila[0] + 1;
-    } catch (Exception $e) {
-        throw new Exception($e->getMessage());
-    }
+	try {
+		$sql = "select max($campo) from $tabla";
+		$datos = obtenerDatosConsulta($sql);
+		$fila = $datos->fetch_array();
+		return $fila[0] + 1;
+	} catch (Exception $e) {
+		throw new Exception($e->getMessage(), $e->getCode());
+	}
 }
 
 /**

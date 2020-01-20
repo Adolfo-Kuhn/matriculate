@@ -27,7 +27,7 @@ if (isset($_SESSION['user'])) {
 				$_SESSION[$user]['inicio'] = getDateTime();
 			}
 		} catch (Exception $e) {
-			$exc = getAlertElement($e, 'danger');
+			$exc = getAlertElement($e->getMessage(), 'danger');
 		}
 	}
 }

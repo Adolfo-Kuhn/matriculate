@@ -8,6 +8,8 @@ try {
 	$tabla = null;
 	if (!isset($_SESSION['user'])) {
 		header('location: index.php');
+	} else {
+		$user = $_SESSION['user'];
 	}
 	if (isset($_REQUEST['tabla'])) {
 		$tabla = $_POST['tabla'];
