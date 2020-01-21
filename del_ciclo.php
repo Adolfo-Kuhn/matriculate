@@ -90,11 +90,11 @@ try {
 							<?php endif; ?>
 						</ol>
 						<aside class='container'>
-							<form class='selector-box mb-3' name='edicion' action='eliminar.php' method='POST'>
+							<form class='selector-box mb-3' action='eliminar.php' method='POST'>
 								<div class="input-group col-5">
 									<?php include_once './components/selec-tabla.inc.php'; ?>
 									<div class="input-group-append">
-										<label class="input-group-text" for="selec-tabla">Edición</label>
+										<label class="input-group-text" for="selec-tabla">Eliminación</label>
 									</div>
 								</div>
 								<button type="submit" class="btn btn-success">Seleccionar</button>

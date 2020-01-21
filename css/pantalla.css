@@ -68,3 +68,10 @@ form[name=new-theme] {
 	margin-top: 1.85rem;
 	flex: .5;
 }
+
+.new-form[name=new-user] {
+	flex-direction: column;
+	height: auto;
+	width: auto;
+	margin-left: 2rem;
+}

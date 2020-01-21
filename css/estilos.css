@@ -41,8 +41,6 @@ html, body {
 	align-items: center;
 	flex: 1;
 	min-width: 400px;
-	color: #fff;
-	background-color: #313a46;
 	font-size: 2.5rem;
 	font-family: 'Work Sans', sans-serif;
 }
@@ -54,15 +52,10 @@ html, body {
 .header__titulo-id {
 	padding: .75rem 1.1rem .75rem 0;
 	margin-right: 2rem;
-	color: #aaa;
 	background: url(../img/arrow_dwn.png) right no-repeat;
 	font-family: "Lato";
 	font-size: 15px;
 	cursor: pointer;
-}
-
-.header__titulo-id:hover {
-	color: #eee;
 }
 
 .header__titulo-id__logged {
@@ -216,21 +209,14 @@ html, body {
 	flex-direction: column;
 	min-width: 200px;
 	padding-top: 1rem;
-	background-color: #313a46;
 }
 
 .nav__item {
-	color: #aaa;
 	padding: .3125rem 1.25rem;
 }
 
 .nav__item > a {
-	color: #aaa;
 	text-decoration: none;
-}
-
-.nav__item > a:hover {
-	color: #eee;
 }
 /* END MENU DE NAVEGACIÓN PRINCIPAL */
 

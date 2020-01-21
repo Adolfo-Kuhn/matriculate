@@ -89,6 +89,8 @@ const SQL_DELASIGNATURA_2 = "delete from asignatura where idAsignatura=";
 const SQL_DELCICLO_1 = "select nombre, siglas, urlLogotipo from ciclo where idCiclo = ?";
 const SQL_DELCICLO_2 = "delete from ciclo where idCiclo = ?";
 
+const SQL_DELMATRICULA = "delete from matricula where dniAlumno = ? and idAsignatura = ?";
+
 const SQL_DELMATRICULA_1 = <<<'SQL'
 select concat(alumno.nombre, ' ', apellidos) as 'alumno',
 asignatura.nombre as asignatura, repetidor, notaFinal from matricula

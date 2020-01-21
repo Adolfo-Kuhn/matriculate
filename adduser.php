@@ -8,38 +8,31 @@ try {
 	$tabla = null;
 	if (!isset($_SESSION['user'])) {
 		header('location: index.php');
+		die();
 	} else {
 		$user = $_SESSION['user'];
-	}
-	if (isset($_REQUEST['tabla'])) {
-		$tabla = $_POST['tabla'];
-		switch (strtolower($tabla)) {
-			case 'alumno':
-				$listado = crearCuerpoTabla(CABECERAS_ALUMNO, SQL_LEER_ALUMNO);
-				break;
-			case 'asignatura':
-				$listado = crearCuerpoTabla(CABECERAS_ASIGNATURA, SQL_LEER_ASIGNATURA_2);
-				break;
-			case 'ciclo':
-				$listado = crearCuerpoTabla(CABECERAS_CICLO, SQL_LEER_CICLO);
-				break;
-			case 'matrícula':
-				$matricula = true;
-				if (isset($_POST['asignatura'])) {
-					if ($_POST['asignatura'] > 0) {
-						$asignatura = $_POST['asignatura'];
-						$txtAsignatura = $_POST['txtAsig'];
-						$selec_matricula = obtenerSelAsignaturas($asignatura);
-						$sql = SQL_LEER_MATRICULA . $asignatura;
-						$listado = crearCuerpoTabla(CABECERAS_MATRICULA, $sql);
-					}
-				} else {
-					$selec_matricula = obtenerSelAsignaturas();
-				}
-				break;
-			case 'profesor':
-				$listado = crearCuerpoTabla(CABECERAS_ALUMNO, SQL_LEER_PROFESOR);
-				break;
+		if (strcmp($user, 'admin') !== 0) {
+			header('location: index.php');
+			die();
+		}
+		if (isset($_REQUEST['new_user'])) {
+			$id = obtenerIdMaximo('id', 'usuarios') + 1;
+			$usuario = $_POST['username'];
+			$pass = password_hash($_POST['pass'], PASSWORD_BCRYPT);
+			$mail = $_POST['mail'];
+			$conexion = conectarBD();
+			$consulta = $conexion->stmt_init();
+			$consulta->prepare('insert into usuarios (id, usuario, pwd, email) values (?,?,?,?)');
+			$consulta->bind_param('isss', $id, $usuario, $pass, $mail);
+			if ($consulta->execute()) {
+				$msg = "¡Operación realizada correctame! Usuario $usuario dado de alta.";
+				$respuesta = getAlertElement($msg, 'success');
+			} else {
+				$msg = '¡Operación fallida! El alta del usuario no fue realizada.';
+				$respuesta = getAlertElement($msg, 'warning');				
+			}
+			$consulta->close();
+			$conexion->close();		
 		}
 	}
 } catch (Exception $e) {
@@ -61,82 +54,42 @@ try {
 				<div class='header__logo'>Matricúl<mark class='logo-end'>Ate</mark></div>
 				<div class='header__titulo'>
 					<span class='header__titulo-txt'>IES Linus Torvalds</span>
-					<span class='header__titulo-id__logged'><?= $_SESSION['user'] ?></span>
+					<span class='header__titulo-id__logged'><?= $user ?></span>
 				</div>
 			</header>
 			<main class='main'>
-				<?php
-				if (strcmp($_SESSION['user'], 'admin') === 0) {
-					include_once './components/nav_admin.inc.php';
-				} else {
-					include_once './components/nav_user.inc.php';
-				}
-				?>
+				<?php include_once './components/nav_admin.inc.php'; ?>
 				<article class='screen'>
 					<header class='form-header'>
 						<ol class="breadcrumb">
-							<?php if (isset($tabla)): ?>
-								<li class="breadcrumb-item">Consultar</li>
-								<?php if (strcasecmp($tabla, 'seleccione registro...') !== 0): ?>
-									<?php if (isset($asignatura)): ?>
-										<li class="breadcrumb-item "><?= $tabla ?></li>
-										<li class="breadcrumb-item active"><?= $txtAsignatura ?></li>
-									<?php else: ?>
-										<li class="breadcrumb-item active"><?= $tabla ?></li>
-									<?php endif; ?>
-								<?php endif; ?>
-							<?php else: ?>
-								<li class="breadcrumb-item active">Consultar</li>
-							<?php endif; ?>
+							<li class="breadcrumb-item active">Nuevo Usuario</li>
 						</ol>
-						<aside class='container'>
-							<form class='selector-box mb-3' name='consulta' action='consultas.php' method='POST'>
-								<div class="input-group col-5">
-									<select class="custom-select" id="selec-tabla" name='tabla'>
-										<option>Seleccione registro...</option>
-										<?php if (strcmp($tabla, 'Alumno') === 0): ?>
-											<option value='Alumno' selected>Alumnos</option>
-										<?php else: ?>
-											<option value='Alumno'>Alumnos</option>
-										<?php endif; ?>
-										<?php if (strcmp($tabla, 'Asignatura') === 0): ?>
-											<option value='Asignatura' selected>Asignaturas</option>
-										<?php else: ?>
-											<option value='Asignatura'>Asignaturas</option>
-										<?php endif; ?>
-										<?php if (strcmp($tabla, 'Ciclo') === 0): ?>
-											<option value='Ciclo' selected>Ciclos</option>
-										<?php else: ?>
-											<option value='Ciclo'>Ciclos</option>
-										<?php endif; ?>
-										<?php if (strcmp($tabla, 'Matrícula') === 0): ?>
-											<option value='Matrícula' selected>Matrículas</option>
-										<?php else: ?>
-											<option value='Matrícula'>Matrículas</option>
-										<?php endif; ?>
-										<?php if (strcmp($tabla, 'Profesor') === 0): ?>
-											<option value='Profesor' selected>Profesores</option>
-										<?php else: ?>
-											<option value='Profesor'>Profesores</option>
-										<?php endif; ?>
-									</select>
-									<div class="input-group-append">
-										<label class="input-group-text" for="selec-tabla">Consulta</label>
-									</div>
-								</div>
-								<?php
-								if (isset($selec_matricula)) {
-									echo $selec_matricula;
-								}
-								?>
-								<input type='hidden' name='txtAsig' id='txtAsig'>
-								<button type="submit" class="btn btn-success">Seleccionar</button>
-							</form>
-						</aside>
 					</header>
-					<?php if (isset($listado)): ?>
-					<main class='container showcase'><?= $listado ?></main>
-					<?php endif; ?>
+					<main class='container form-showcase'>
+						<?php
+						if (isset($respuesta)) {
+							echo $respuesta;
+						}
+						?>
+						<form class='new-form' name="new-user" action="adduser.php" method="POST">
+							<div class='h4 px-3 mb-3'>Alta de usuario</div>
+							<div class="form-group col-5">
+								<label for="nombre">Nombre de usuario</label>
+								<input type="text" class="form-control" id="nombre" name="username" required>
+							</div>
+							<div class="form-group col-5">
+								<label for="pass">Contraseña</label>
+								<input type="password" class="form-control" id="pass" name="pass" required>
+							</div>
+							<div class="form-group col-5">
+								<label for="nombre">Correo electrónico</label>
+								<input type="email" class="form-control" id="mail" name="mail" required>
+							</div>
+							<div class='form-group col-5 btn-submit'>
+								<input type='submit' class='btn btn-info' name='new_user' value='Aceptar'>
+							</div>
+						</form>
+					</main>
 				</article>
 			</main>
         </div>

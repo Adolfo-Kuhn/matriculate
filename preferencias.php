@@ -10,21 +10,27 @@ try {
 		header('location: index.php');
 	} else {
 		$user = $_SESSION['user'];
-	}
-	if (isset($_REQUEST['bgform'])) {
-		$fondo = $_POST['bgcolor'];
-	}
-	if (isset($_REQUEST['txform'])) {
-		$texto = $_POST['txcolor'];
-	}
-	if (isset($_REQUEST['visitas'])) {
-		setcookie('visitas', 0, time() + (60 * 60 * 24 * 90));
-	}
-	if (isset($_REQUEST['defecto'])) {
-		unset($_SESSION[$user]['visitas']);
-		unset($_SESSION[$user]['bgColor']);
-		unset($_SESSION[$user]['TxtColor']);
-		unset($_SESSION[$user]['inicio']);		
+		if (isset($_REQUEST['bgform'])) {
+			$fondo = $_POST['bgcolor'];
+			$_SESSION[$user]['bgcolor'] = $fondo;
+			setcookie($user . '_fondo', $fondo, time() + (60 * 60 * 24 * 90));
+		}
+		if (isset($_REQUEST['txform'])) {
+			$texto = $_POST['txcolor'];
+			$hover = $_POST['txhover'];
+			$_SESSION[$user]['txcolor'] = $texto;
+			$_SESSION[$user]['txhover'] = $hover;
+			setcookie($user . '_texto', $texto, time() + (60 * 60 * 24 * 90));
+			setcookie($user . '_hover', $hover, time() + (60 * 60 * 24 * 90));
+		}
+		if (isset($_REQUEST['visitas'])) {
+			$_SESSION['visitas'] = 0;
+			setcookie($user . '_visitas', 0, time() + (60 * 60 * 24 * 90));
+		}
+		if (isset($_REQUEST['defecto'])) {
+			unset($_SESSION['visitas']);
+			unset($_SESSION[$user]);
+		}
 	}
 } catch (Exception $e) {
 	$exc = getAlertElement($e->getMessage(), 'alert');
@@ -40,6 +46,7 @@ try {
 		<link rel='stylesheet' href='./css/bootstrap.min.css'>
 		<link rel='stylesheet' href='./css/estilos.css'>
 		<link rel='stylesheet' href='./css/pantalla.css'>
+		<link rel='stylesheet' type="text/css" href='./css/settings.php'>
 		<script src='./js/codigo.js'></script>
 		<script src='./js/prefs.js'></script>
 		<title>MatricúlAte</title>
@@ -48,10 +55,6 @@ try {
 				display: flex;
 				justify-content: space-around;
 				margin-bottom: 1rem;
-			}
-			div.preferencias + div.preferencias {
-				margin-left: 3.5rem;
-				justify-content: flex-start;
 			}
 			div.preferencias:nth-child(2) {
 				margin-top: 2.5rem;
@@ -143,7 +146,7 @@ try {
 										</div>
 									</div>
 									<div class='form-group btn-submit'>
-										<input type="submit" class="btn btn-dark" value='Aplicar'>
+										<input type="submit" name="bgform" class="btn btn-dark" value='Aplicar'>
 									</div>
 								</fieldset>
 							</form>
@@ -172,7 +175,7 @@ try {
 										</div>
 									</div>
 									<div class='form-group btn-submit'>
-										<input type="submit" class="btn btn-dark" value='Aplicar'>
+										<input type="submit" name="txform" class="btn btn-dark" value='Aplicar'>
 									</div>
 								</fieldset>
 							</form>
@@ -183,9 +186,9 @@ try {
 									<div class="input-group-prepend">
 										<span class="input-group-text">Nº de visitas</span>
 									</div>
-									<input type="text" class="form-control" placeholder="<?= $_SESSION[$user]['visitas'] ?>">
+									<input type="text" class="form-control" placeholder="<?= $_SESSION['visitas'] ?>">
 									<div class="input-group-append">
-										<button class="btn btn-dark" type="button" id="button-addon1">Reiniciar</button>
+										<button class="btn btn-dark" name="visitas" type="button" id="button-addon1">Reiniciar</button>
 									</div>
 								</div>
 							</form>
@@ -197,7 +200,7 @@ try {
 										<span class="input-group-text">Restablecer la configuración por defecto</span>
 									</div>
 									<div class="input-group-append">
-										<button class="btn btn-dark" type="button" id="button-addon2">Restablecer</button>
+										<button class="btn btn-dark" name="defecto" type="button" id="button-addon2">Restablecer</button>
 									</div>
 								</div>								
 							</form>

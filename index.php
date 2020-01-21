@@ -6,8 +6,8 @@ session_start(['cookie_lifetime' => (60 * 60 * 24 * 90)]);
 if (isset($_SESSION['user'])) {
 	$logged = true;
 	$user = $_SESSION['user'];
-	$visitas = $_SESSION[$user]['visitas'];
-	$inicio = $_SESSION[$user]['inicio'];
+	$visitas = $_SESSION['visitas'];
+	$inicio = $_SESSION['inicio'];
 } else {
 	if (isset($_POST['entrar'])) {
 		try {
@@ -23,8 +23,8 @@ if (isset($_SESSION['user'])) {
 					setcookie($user . '_visitas', $visitas, time() + (60 * 60 * 24 * 90));
 				}
 				$_SESSION['user'] = $user;
-				$_SESSION[$user]['visitas'] = $visitas;
-				$_SESSION[$user]['inicio'] = getDateTime();
+				$_SESSION['visitas'] = $visitas;
+				$_SESSION['inicio'] = getDateTime();
 			}
 		} catch (Exception $e) {
 			$exc = getAlertElement($e->getMessage(), 'danger');
