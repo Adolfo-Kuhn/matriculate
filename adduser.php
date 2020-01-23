@@ -28,7 +28,7 @@ try {
 				$msg = "¡Operación realizada correctame! Usuario $usuario dado de alta.";
 				$respuesta = getAlertElement($msg, 'success');
 			} else {
-				$msg = '¡Operación fallida! El alta del usuario no fue realizada.';
+				$msg = '¡Operación fallida! El proceso alta de usuario no fue realizado.';
 				$respuesta = getAlertElement($msg, 'warning');				
 			}
 			$consulta->close();
