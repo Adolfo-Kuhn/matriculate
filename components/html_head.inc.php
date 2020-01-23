@@ -6,7 +6,7 @@
 	<link rel='stylesheet' href='./css/bootstrap.min.css'>
 	<link rel='stylesheet' href='./css/estilos.css'>
 	<link rel='stylesheet' href='./css/pantalla.css'>
-	<link rel='stylesheet' type="text/css" href='./css/settings.php'>
+	<link rel='stylesheet' type="text/css" href='./css/settings.css.php'>
 	<script src='./js/codigo.js'></script>
 	<title>MatricúlAte</title>
 </head>

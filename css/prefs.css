@@ -1,0 +1,41 @@
+
+div.preferencias {
+	display: flex;
+	justify-content: space-around;
+	margin-bottom: 1rem;
+}
+div.preferencias:nth-child(2) {
+	margin-top: 2.5rem;
+}
+.fondo, .texto {
+	flex-basis: 40%;
+}
+input.color {
+	border: none;
+	border-radius: 0;
+	cursor: default;
+}
+.btn-submit input[name=aplicarBgc],.btn-submit input[name=aplicarTxt] {
+	margin-top: 1rem;
+}
+#bgc1 {
+	background-color: #313a46;
+}
+#bgc2 {
+	background-color: #4b5043;
+}
+#bgc3 {
+	background-color: #614a3e;
+}
+#txt1 {
+	background-color: #aaa;
+}
+#txt2 {
+	background-color: #add1bf;
+}
+#txt3 {
+	background-color: #adb9a5;
+}
+fieldset > legend {
+	color: #8e939a;
+}

@@ -5,7 +5,6 @@ require_once './data/data_sql.php';
 try {
 	session_start();
 
-	$tabla = null;
 	if (!isset($_SESSION['user'])) {
 		header('location: index.php');
 	} else {
@@ -14,6 +13,7 @@ try {
 			$fondo = $_POST['bgcolor'];
 			$_SESSION[$user]['bgcolor'] = $fondo;
 			setcookie($user . '_fondo', $fondo, time() + (60 * 60 * 24 * 90));
+			$fondo = '#' . $fondo;
 		}
 		if (isset($_REQUEST['txform'])) {
 			$texto = $_POST['txcolor'];
@@ -22,14 +22,29 @@ try {
 			$_SESSION[$user]['txhover'] = $hover;
 			setcookie($user . '_texto', $texto, time() + (60 * 60 * 24 * 90));
 			setcookie($user . '_hover', $hover, time() + (60 * 60 * 24 * 90));
+			$texto = '#' . $texto;
+			$hover = '#' . $hover;
 		}
 		if (isset($_REQUEST['visitas'])) {
-			$_SESSION['visitas'] = 0;
-			setcookie($user . '_visitas', 0, time() + (60 * 60 * 24 * 90));
+			$_SESSION['visitas'] = 1;
+			setcookie($user . '_visitas', 1, time() + (60 * 60 * 24 * 90));
 		}
 		if (isset($_REQUEST['defecto'])) {
-			unset($_SESSION['visitas']);
-			unset($_SESSION[$user]);
+			$_SESSION['visitas'] = 1;
+			setcookie($user . '_visitas', 1, time() + (60 * 60 * 24 * 90));
+			unset($_SESSION[$user]['bgcolor']);
+			unset($_SESSION[$user]['txcolor']);
+			unset($_SESSION[$user]['txhover']);
+			setcookie($user . '_fondo', '', time() - (60 * 60));
+			setcookie($user . '_title', '', time() - (60 * 60));
+			setcookie($user . '_texto', '', time() - (60 * 60));
+			setcookie($user . '_hover', '', time() - (60 * 60));
+		}
+		if (isset($_SESSION[$user]['bgcolor'])) {
+			$fondo = '#' . $_SESSION[$user]['bgcolor'];
+		}
+		if (isset($_SESSION[$user]['txcolor'])) {
+			$texto = '#' . $_SESSION[$user]['txcolor'];
 		}
 	}
 } catch (Exception $e) {
@@ -46,52 +61,11 @@ try {
 		<link rel='stylesheet' href='./css/bootstrap.min.css'>
 		<link rel='stylesheet' href='./css/estilos.css'>
 		<link rel='stylesheet' href='./css/pantalla.css'>
-		<link rel='stylesheet' type="text/css" href='./css/settings.php'>
+		<link rel='stylesheet' href='./css/prefs.css'>
+		<link rel='stylesheet' type="text/css" href='./css/settings.css.php'>
 		<script src='./js/codigo.js'></script>
 		<script src='./js/prefs.js'></script>
 		<title>MatricúlAte</title>
-		<style>
-			div.preferencias {
-				display: flex;
-				justify-content: space-around;
-				margin-bottom: 1rem;
-			}
-			div.preferencias:nth-child(2) {
-				margin-top: 2.5rem;
-			}
-			.fondo, .texto {
-				flex-basis: 40%;
-			}
-			input.color {
-				border: none;
-				border-radius: 0;
-				cursor: default;
-			}
-			.btn-submit input[name=aplicarBgc],.btn-submit input[name=aplicarTxt] {
-				margin-top: 1rem;
-			}
-			#bgc1 {
-				background-color: #313a46;
-			}
-			#bgc2 {
-				background-color: #e95420;
-			}
-			#bgc3 {
-				background-color: #78c2ad;
-			}
-			#txt1 {
-				background-color: #aaa;
-			}
-			#txt2 {
-				background-color: #f5b199;
-			}
-			#txt3 {
-				background-color: #adb9a5;
-			}
-			fieldset > legend {
-				color: #8e939a;
-			}
-		</style>
 	</head>
     <body>
 		<div class='wrapper'>
@@ -128,19 +102,35 @@ try {
 								<fieldset class='bgcSet'>
 									<legend class='h5'>Color de fondo</legend>
 									<div class="form-check">
-										<input class="form-check-input" type="radio" name="bgcolor" value="#e95420" checked>
+										<?php if (isset($fondo)): ?>
+											<?php if (strcasecmp($fondo, '#313a46') === 0): ?>
+												<input class="form-check-input" type="radio" name="bgcolor" value="313a46" checked>
+											<?php else: ?>
+												<input class="form-check-input" type="radio" name="bgcolor" value="313a46">
+											<?php endif; ?>
+										<?php else: ?>
+											<input class="form-check-input" type="radio" name="bgcolor" value="313a46" checked>
+										<?php endif; ?>
 										<div class="form-group">
 											<input type="text" class="form-control color" id="bgc1" readonly>
 										</div>
 									</div>
 									<div class="form-check">
-										<input class="form-check-input" type="radio" name="bgcolor" value="#78c2ad">
+										<?php if (isset($fondo) && strcasecmp($fondo, '#4b5043') === 0): ?>
+											<input class="form-check-input" type="radio" name="bgcolor" value="4b5043" checked>
+										<?php else: ?>
+											<input class="form-check-input" type="radio" name="bgcolor" value="4b5043">
+										<?php endif; ?>
 										<div class="form-group">
 											<input type="text" class="form-control color" id="bgc2" readonly>
 										</div>
 									</div>
 									<div class="form-check">
-										<input class="form-check-input" type="radio" name="bgcolor" value="#008cba">
+										<?php if (isset($fondo) && strcasecmp($fondo, '#614a3e') === 0): ?>
+											<input class="form-check-input" type="radio" name="bgcolor" value="614a3e" checked>
+										<?php else: ?>
+											<input class="form-check-input" type="radio" name="bgcolor" value="614a3e">
+										<?php endif; ?>
 										<div class="form-group">
 											<input type="text" class="form-control color" id="bgc3" readonly>
 										</div>
@@ -150,26 +140,42 @@ try {
 									</div>
 								</fieldset>
 							</form>
-							<form class='texto'  name='txform' action='preferencias.php' method="POST">
+							<form class='texto' name='txform' action='preferencias.php' method="POST">
 								<fieldset class='txtSet'>
 									<legend class='h5'>Color de texto</legend>
 									<div class="form-check">
-										<input class="form-check-input" type="radio" name="txcolor" value="#aaa" checked>
-										<input type="hidden" name="txcolorHover1" value="#eee">
+										<?php if (isset($texto)): ?>
+											<?php if (strcasecmp($texto, '#aaa') === 0): ?>
+												<input class="form-check-input" type="radio" name="txcolor" value="aaa" checked>
+											<?php else: ?>
+												<input class="form-check-input" type="radio" name="txcolor" value="aaa">
+											<?php endif; ?>
+										<?php else: ?>
+											<input class="form-check-input" type="radio" name="txcolor" value="aaa" checked>
+										<?php endif; ?>
+										<input type="hidden" name="txhover" value="eee">
 										<div class="form-group">
 											<input type="text" class="form-control color" id="txt1" readonly>
 										</div>
 									</div>
 									<div class="form-check">
-										<input class="form-check-input" type="radio" name="txcolor" value="#f5b199">
-										<input type="hidden" name="txcolorHover2" value="#f9d0c2">
+										<?php if (isset($texto) && strcasecmp($texto, '#add1bf') === 0): ?>
+											<input class="form-check-input" type="radio" name="txcolor" value="add1bf" checked>
+										<?php else: ?>
+											<input class="form-check-input" type="radio" name="txcolor" value="add1bf">
+										<?php endif; ?>
+										<input type="hidden" name="txhover" value="d3ffe9">
 										<div class="form-group">
 											<input type="text" class="form-control color" id="txt2" readonly>
 										</div>
 									</div>
 									<div class="form-check">
-										<input class="form-check-input" type="radio" name="txcolor" value="#adb9a5">
-										<input type="hidden" name="txcolorHover3" value="#f9d0c2">
+										<?php if (isset($texto) && strcasecmp($texto, '#adb9a5') === 0): ?>
+											<input class="form-check-input" type="radio" name="txcolor" value="adb9a5" checked>
+										<?php else: ?>
+											<input class="form-check-input" type="radio" name="txcolor" value="adb9a5">
+										<?php endif; ?>
+										<input type="hidden" name="txhover" value="cfbfb0">
 										<div class="form-group">
 											<input type="text" class="form-control color" id="txt3" readonly>
 										</div>
@@ -181,14 +187,14 @@ try {
 							</form>
 						</div>
 						<div class='preferencias'>
-							<form class='' name='visitas' action='preferencias.php' method="POST">
+							<form name='visitas' action='preferencias.php' method="POST">
 								<div class="input-group mb-3" id='ig1'>
 									<div class="input-group-prepend">
 										<span class="input-group-text">Nº de visitas</span>
 									</div>
 									<input type="text" class="form-control" placeholder="<?= $_SESSION['visitas'] ?>">
 									<div class="input-group-append">
-										<button class="btn btn-dark" name="visitas" type="button" id="button-addon1">Reiniciar</button>
+										<button class="btn btn-dark" name="visitas" type="submit" id="button-addon1">Reiniciar</button>
 									</div>
 								</div>
 							</form>
@@ -200,7 +206,7 @@ try {
 										<span class="input-group-text">Restablecer la configuración por defecto</span>
 									</div>
 									<div class="input-group-append">
-										<button class="btn btn-dark" name="defecto" type="button" id="button-addon2">Restablecer</button>
+										<button class="btn btn-dark" name="defecto" type="submit" id="button-addon2">Restablecer</button>
 									</div>
 								</div>								
 							</form>
