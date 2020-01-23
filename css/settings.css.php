@@ -1,9 +1,13 @@
 <?php
 header("Content-Type: text/css; charset=utf-8");
+/* Se establece el tipo de contenido para que se codifique
+ * como una hoja de estilos css */
 
 session_start();
 
-/* Estilo por defecto */
+/* Estilo por defecto.
+ * Si no hay ninguna otra modificación estos serán
+ * los estilos aplicables */
 $fondo = "#313a46";
 $title = "#fff";
 $texto = "#aaa";

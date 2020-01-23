@@ -14,6 +14,7 @@ try {
 			$_SESSION[$user]['bgcolor'] = $fondo;
 			setcookie($user . '_fondo', $fondo, time() + (60 * 60 * 24 * 90));
 			$fondo = '#' . $fondo;
+			$respuesta = getAlertElement('<strong>¡Entorno actualizado!</strong> Se modificó el color del escritorio.', 'warning');
 		}
 		if (isset($_REQUEST['txform'])) {
 			$texto = $_POST['txcolor'];
@@ -24,10 +25,12 @@ try {
 			setcookie($user . '_hover', $hover, time() + (60 * 60 * 24 * 90));
 			$texto = '#' . $texto;
 			$hover = '#' . $hover;
+			$respuesta = getAlertElement('<strong>¡Entorno actualizado!</strong> Se modificó el color del texto.', 'warning');
 		}
 		if (isset($_REQUEST['visitas'])) {
 			$_SESSION['visitas'] = 1;
 			setcookie($user . '_visitas', 1, time() + (60 * 60 * 24 * 90));
+			$respuesta = getAlertElement('<strong>¡Entorno actualizado!</strong> Se reinició el contador de visitas.', 'warning');
 		}
 		if (isset($_REQUEST['defecto'])) {
 			$_SESSION['visitas'] = 1;
@@ -39,6 +42,7 @@ try {
 			setcookie($user . '_title', '', time() - (60 * 60));
 			setcookie($user . '_texto', '', time() - (60 * 60));
 			setcookie($user . '_hover', '', time() - (60 * 60));
+			$respuesta = getAlertElement('<strong>¡Entorno actualizado!</strong> Se restablecieron los valores por defecto.', 'warning');
 		}
 		if (isset($_SESSION[$user]['bgcolor'])) {
 			$fondo = '#' . $_SESSION[$user]['bgcolor'];
@@ -97,6 +101,11 @@ try {
 						</ol>
 					</header>
 					<main class='container showcase'>
+						<?php
+						if (isset($respuesta)) {
+							echo $respuesta;
+						}
+						?>
 						<div class='preferencias'>							
 							<form class='fondo' name='bgform' action='preferencias.php' method="POST">
 								<fieldset class='bgcSet'>

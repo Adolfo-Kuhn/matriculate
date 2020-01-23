@@ -12,7 +12,9 @@ from asignatura inner join profesor on dniProfesor = dni
 inner join ciclo on asignatura.idCiclo = ciclo.idCiclo
 SQL;
 const SQL_LEER_CICLO = 'select idCiclo, nombre, siglas, urlLogotipo from ciclo';
+const SQL_NOMBRE_CICLO = 'select nombre from ciclo where idCiclo = ?';
 const SQL_LEER_PROFESOR = 'select dni, apellidos, nombre, fecha_nacimiento from profesor';
+const SQL_NOMBRE_PROFESOR = "select concat(apellidos, ', ', nombre) from profesor where dni = ?";
 const SQL_LEER_MATRICULA = <<<'SQL'
 select asignatura.nombre, concat(alumno.nombre, ' ', alumno.apellidos), dniAlumno, repetidor
 from asignatura natural join matricula inner join alumno on dniAlumno = dni where idAsignatura =
@@ -82,9 +84,9 @@ const SQL_DELALUMNO_2 = "delete from alumno where dni = ?";
 
 const SQL_DELASIGNATURA_1 = <<<'SQL'
 select nombre, siglas, horasSemana, dniProfesor, idCiclo, curso,
-anho, urlLogotipo from asignatura where idAsignatura=
+anho, urlLogotipo from asignatura where idAsignatura = ?
 SQL;
-const SQL_DELASIGNATURA_2 = "delete from asignatura where idAsignatura=";
+const SQL_DELASIGNATURA_2 = "delete from asignatura where idAsignatura = ?";
 
 const SQL_DELCICLO_1 = "select nombre, siglas, urlLogotipo from ciclo where idCiclo = ?";
 const SQL_DELCICLO_2 = "delete from ciclo where idCiclo = ?";
