@@ -12,7 +12,7 @@ try {
 		if (isset($_REQUEST['bgform'])) {
 			$fondo = $_POST['bgcolor'];
 			$_SESSION[$user]['bgcolor'] = $fondo;
-			setcookie($user . '_fondo', $fondo, time() + (60 * 60 * 24 * 90));
+			setcookie($user . '_fondo', $fondo, time() + (60 * 60 * 24 * 360));
 			$fondo = '#' . $fondo;
 			$respuesta = getAlertElement('<strong>¡Entorno actualizado!</strong> Se modificó el color del escritorio.', 'warning');
 		}
@@ -21,20 +21,20 @@ try {
 			$hover = $_POST['txhover'];
 			$_SESSION[$user]['txcolor'] = $texto;
 			$_SESSION[$user]['txhover'] = $hover;
-			setcookie($user . '_texto', $texto, time() + (60 * 60 * 24 * 90));
-			setcookie($user . '_hover', $hover, time() + (60 * 60 * 24 * 90));
+			setcookie($user . '_texto', $texto, time() + (60 * 60 * 24 * 360));
+			setcookie($user . '_hover', $hover, time() + (60 * 60 * 24 * 360));
 			$texto = '#' . $texto;
 			$hover = '#' . $hover;
 			$respuesta = getAlertElement('<strong>¡Entorno actualizado!</strong> Se modificó el color del texto.', 'warning');
 		}
 		if (isset($_REQUEST['visitas'])) {
 			$_SESSION['visitas'] = 1;
-			setcookie($user . '_visitas', 1, time() + (60 * 60 * 24 * 90));
+			setcookie($user . '_visitas', 1, time() + (60 * 60 * 24 * 360));
 			$respuesta = getAlertElement('<strong>¡Entorno actualizado!</strong> Se reinició el contador de visitas.', 'warning');
 		}
 		if (isset($_REQUEST['defecto'])) {
 			$_SESSION['visitas'] = 1;
-			setcookie($user . '_visitas', 1, time() + (60 * 60 * 24 * 90));
+			setcookie($user . '_visitas', 1, time() + (60 * 60 * 24 * 360));
 			unset($_SESSION[$user]['bgcolor']);
 			unset($_SESSION[$user]['txcolor']);
 			unset($_SESSION[$user]['txhover']);

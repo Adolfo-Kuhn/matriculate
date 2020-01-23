@@ -29,12 +29,6 @@ const SQL_CREAR_CICLO_INSERT = "insert into ciclo values (?, ?, ?, ?)";
 const SQL_CREAR_MATRICULA_INSERT = "insert into matricula values (?, ?, ?, ?)";
 const SQL_CREAR_PROFESOR_INSERT = "insert into profesor values (?, ?, ?, ?, ?)";
 
-const SQL_CAMBIAR_ASIGNATURA = "select idAsignatura, nombre from asignatura";
-const SQL_CAMBIAR_MATRICULA = <<<'SQL'
-select dniAlumno, idAsignatura, concat(alumno.nombre, ' ', apellidos, ' (', dni, ')'), asignatura.nombre
-from matricula natural join asignatura inner join alumno on dniAlumno = dni order by 1
-SQL;
-
 const SQL_MODALUMNO_1 = <<<'SQL'
 select nombre, apellidos, dni, sexo, fecha_nacimiento
 from alumno where dni = ?
@@ -73,13 +67,7 @@ update profesor set nombre = ?, apellidos = ?, sexo = ?, fecha_nacimiento = ? wh
 SQL;
 
 const SQL_BORRAR_MATRICULA_1 = "select dni, concat(nombre, ' ', apellidos) from alumno";
-const SQL_BORRAR_ASIGNATURA = 'select idAsignatura, nombre from asignatura';
-const SQL_BORRAR_MATRICULA_2 = <<<'SQL'
-select dniAlumno, idAsignatura, concat(alumno.nombre, ' ', apellidos, ' (', dni, ')'), 
-asignatura.nombre from matricula natural join asignatura
-inner join alumno on dniAlumno = dni order by 1
-SQL;
-const SQL_DELALUMNO_1 = "select nombre, apellidos, sexo, dni, fecha_nacimiento from alumno where dni= ";
+
 const SQL_DELALUMNO_2 = "delete from alumno where dni = ?";
 
 const SQL_DELASIGNATURA_1 = <<<'SQL'
@@ -92,18 +80,3 @@ const SQL_DELCICLO_1 = "select nombre, siglas, urlLogotipo from ciclo where idCi
 const SQL_DELCICLO_2 = "delete from ciclo where idCiclo = ?";
 
 const SQL_DELMATRICULA = "delete from matricula where dniAlumno = ? and idAsignatura = ?";
-
-const SQL_DELMATRICULA_1 = <<<'SQL'
-select concat(alumno.nombre, ' ', apellidos) as 'alumno',
-asignatura.nombre as asignatura, repetidor, notaFinal from matricula
-natural join asignatura inner join alumno on dniAlumno = dni where dniAlumno=
-SQL;
-
-const SQL_DELMATRICULA_2 = " and matricula.idAsignatura=";
-const SQL_DELMATRICULA_3 = "delete from matricula where dniAlumno=";
-const SQL_DELMATRICULA_4 = " and idAsignatura=";
-
-const SQL_DELPROFESOR_1 = <<<'SQL'
-select nombre, apellidos, sexo, dni, fecha_nacimiento from profesor where dni=
-SQL;
-const SQL_DELPROFESOR_2 = "delete from profesor where dni=";

@@ -22,9 +22,9 @@ function manejadorEx($errno, $errstr, $errfile, $errline) {
 set_error_handler('manejadorEx');
 
 /**
- * 
- * @return \mysqli
- * @throws Exception
+ * Realiza la conexión a base de datos y gestiona los posibles errores de conexión.
+ * @return mysqli la conexión activa a la base de datos.
+ * @throws Exception en caso de error en la conexión a la base de datos.
  */
 function conectarBD() {
 	restore_error_handler();
@@ -54,11 +54,12 @@ function conectarBD() {
 }
 
 /**
- * 
- * @param type $user
- * @param type $pass
- * @return boolean
- * @throws 
+ * Comprueba si el nombre de usuario y la contraseña recibidas en la petición son
+ * correctos.
+ * @param type $user el nombre de usuario proporcionado en la petición.
+ * @param type $pass la contraseña de usuario proporcionada en la petición.
+ * @return boolean true en caso de que usuario y contraseña sean correctos.
+ * @throws Exception en caso de que o usuario o contraseña no sean correctos.
  */
 function logUser($user, $pass) {
 	$msg = '<strong>¡Acceso no autorizado!</strong> Error de usuario y/o contraseña.';
@@ -90,30 +91,17 @@ function obtenerDatosConsulta($sql) {
 	return $datos;
 }
 
-//esta función se ha sustituido por obtenerSelect();
-//function obtenerSelAsignaturas($selected = '-') {
-//	$resultado = obtenerDatosConsulta(SQL_LEER_ASIGNATURA_1);
-//	$selector = '<div class="input-group col-5">'
-//			. '<select class="custom-select" id="selec-matricula" name="asignatura">'
-//			. '<option value="-">Seleccione asignatura...</option>';
-//	while ($fila = $resultado->fetch_array()) {
-//		$convert = ucwords(strtolower($fila[1]));
-//		$selector .= "<option value='${fila[0]}'";
-//		$selector .= ($fila[0] == $selected) ? (' selected>') : ('>');
-//		$selector .= "$convert</option>";
-//	}
-//	$selector .= '</select><div class="input-group-append">'
-//			. '<label class="input-group-text">Matrícula</label></div></div>';
-//	return $selector;
-//}
-
 /**
- * 
- * @param type $name
- * @param type $label
- * @param type $sql
- * @param type $selected
- * @return string
+ * Crea y devuelve un elemento de tipo 'select' (su estructura bootstrap) con las
+ * opciones que recibe de la consulta sql que recibe por parámetro. Este desplegable
+ * añade una etiqueta al final del input.
+ * @param type $name valor del atributo 'name' del elemento 'select' para enviar
+ * en el formulario.
+ * @param type $label etiqueta que se muestra en el elemento.
+ * @param type $sql consulta sql de la que rescatar los datos para las opciones
+ * del desplegable.
+ * @param type $selected valor del elemento 'option' seleccionado.
+ * @return string cadena de texto con la estructura html del desplegable.
  */
 function obtenerLabeledSelect($name, $label, $sql, $selected = '-') {
 	$resultado = obtenerDatosConsulta($sql);
@@ -133,12 +121,15 @@ function obtenerLabeledSelect($name, $label, $sql, $selected = '-') {
 }
 
 /**
- * 
- * @param type $name
- * @param type $label
- * @param type $sql
- * @param type $selected
- * @return type
+ * Crea y devuelve un elemento de tipo 'select' (su estructura bootstrap) con las
+ * opciones que recibe de la consulta sql que recibe por parámetro.
+ * @param type $name valor del atributo 'name' del elemento 'select' para enviar
+ * en el formulario.
+ * @param type $label etiqueta que se muestra en el elemento.
+ * @param type $sql consulta sql de la que rescatar los datos para las opciones
+ * del desplegable.
+ * @param type $selected valor del elemento 'option' seleccionado.
+ * @return string cadena de texto con la estructura html del desplegable.
  */
 function obtenerSelect($name, $label, $sql, $selected = '-') {
 	$resultado = obtenerDatosConsulta($sql);
@@ -153,26 +144,6 @@ function obtenerSelect($name, $label, $sql, $selected = '-') {
 		$selector .= "$convert</option>";
 	}
 	return $selector .= '</select></div>';
-}
-
-/**
- * 
- * @param type $titulo
- * @param type $tabla
- * @return type
- */
-function obtenerBreadcrum($titulo, $tabla) {
-	if ($tabla) {
-		if (strcasecmp($tabla, 'seleccione registro...') !== 0) {
-			$breadcrum = "<li class='breadcrumb-item'>$titulo</li>";
-			$breadcrum .= "<li class='breadcrumb-item active'>$tabla</li>";
-		} else {
-			$breadcrum = "<li class='breadcrumb-item active'>$titulo</li>";
-		}
-	} else {
-		$breadcrum = "<li class='breadcrumb-item active'>$titulo</li>";
-	}
-	return $breadcrum;
 }
 
 /**
@@ -303,10 +274,11 @@ function obtenerIdMaximo($campo, $tabla) {
 }
 
 /**
- * 
- * @param type $e
- * @param type $tipo
- * @return type
+ * Crea y devuelve una estructura html usada para mostrar mensajes de alerta.
+ * @param String $e texto del mensaje que se mostrará en el aviso.
+ * @param String $tipo texto que representa el tipo de mensaje que se mostrará.
+ * Estos tipos son los establecidos en bootstrap: 'success', 'warning', etc...
+ * @return String texto con la estructura html para mensajes.
  */
 function getAlertElement($e, $tipo) {
 	return <<<"ALERT"
@@ -317,8 +289,9 @@ ALERT;
 }
 
 /**
- * 
- * @return type
+ * Devuelve un array con la fecha y hora actuales en un formato concreto. La primera
+ * posición del array guarda la fecha en formato 'Jue - 01/01/2020'
+ * @return Array de dos posiciones con la fecha y hora.
  */
 function getDateTime() {
 	$sem = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'];
@@ -331,9 +304,9 @@ function getDateTime() {
 }
 
 /**
- * 
- * @param type $number
- * @return type
+ * Convierte números positivos de un solo dígito a dos dígitos.
+ * @param Integer $number el número a convertir en dos dígitos.
+ * @return String cadena de texto con dos dígitos.
  */
 function twoDigit($number) {
 	return ($number < 10) ? ('0' . $number) : ($number);

@@ -16,11 +16,11 @@ if (isset($_SESSION['user'])) {
 				$user = $_POST['user'];
 				if (isset($_COOKIE[$user])) {
 					$visitas = $_COOKIE[$user . '_visitas'] + 1;
-					setcookie($user . '_visitas', $visitas, time() + (60 * 60 * 24 * 90));
+					setcookie($user . '_visitas', $visitas, time() + (60 * 60 * 24 * 360));
 				} else {
 					$visitas = 1;
 					setcookie($user, $user, time() + (60 * 60 * 24 * 90));
-					setcookie($user . '_visitas', $visitas, time() + (60 * 60 * 24 * 90));
+					setcookie($user . '_visitas', $visitas, time() + (60 * 60 * 24 * 360));
 				}
 				$_SESSION['user'] = $user;
 				$_SESSION['visitas'] = $visitas;

@@ -13,10 +13,14 @@ $title = "#fff";
 $texto = "#aaa";
 $hover = "#eee";
 
+// si el usuario está logado
 if (isset($_SESSION['user'])) {
 	$user = $_SESSION['user'];
+	// si se han establecido preferencias en la sesión
 	if (isset($_SESSION[$user]['bgcolor'])) {
+		// se establece el color del fondo
 		$fondo = '#' . $_SESSION[$user]['bgcolor'];
+		// y el del título de la cabecera
 		switch ($fondo) {
 			case '#313a46':
 				$title = '#fff';
@@ -28,10 +32,14 @@ if (isset($_SESSION['user'])) {
 				$title = '#ccb096';
 				break;
 		}
+		// si no hay preferencias sobre el color de fondo
 	} else {
+		// si hay alguna cookie guardada
 		if (isset($_COOKIE[$user . '_fondo'])) {
+			// se establece el color de fondo guardado en la cookie
 			$fondo = '#' . $_COOKIE[$user . '_fondo'];
 			$_SESSION[$user]['bgcolor'] = $_COOKIE[$user . '_fondo'];
+			// y el color del título correspondiente
 			switch ($fondo) {
 				case '#313a46':
 					$title = '#fff';
@@ -45,6 +53,7 @@ if (isset($_SESSION['user'])) {
 			}
 		}
 	}
+	// se procede de la misma manera con el color del texto
 	if (isset($_SESSION[$user]['txcolor'])) {
 		$texto = '#' . $_SESSION[$user]['txcolor'];
 		switch ($texto) {
@@ -67,8 +76,11 @@ if (isset($_SESSION['user'])) {
 		}		
 	}
 }
+/*
+ * Se asignan los valores establecidos a las variables css
+ * que se aplican a los elementos correspondientes
+ */
 ?>
-
 :root {
 --bgcolor: <?= $fondo ?>;
 --ttcolor: <?= $title ?>;
