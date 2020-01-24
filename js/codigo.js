@@ -8,8 +8,8 @@ function inicio() {
 		document.querySelector('.header__titulo-id__logged').addEventListener(
 			'click', mostrarLogoutBox);
 	}
-	if (document.querySelector('#selec-matricula')) {
-		document.querySelector('#selec-matricula').addEventListener('change',
+	if (document.querySelector('select[name=asignatura]')) {
+		document.querySelector('select[name=asignatura]').addEventListener('change',
 			fillInput);
 	}
 	if (document.querySelector('.close')) {
@@ -72,10 +72,10 @@ function ocultarLogoutBox() {
 }
 
 function fillInput() {
-	let selec = document.querySelector('#selec-matricula');
+	console.log(this.target);
+	let selec = document.querySelector('select[name=asignatura]');
 	let index = selec.selectedIndex;
-	document.querySelector('#txtAsig').setAttribute('value',
-		selec[index].textContent);
+	document.querySelector('#txtAsig').value = selec[index].textContent;
 }
 
 function closeAlert() {

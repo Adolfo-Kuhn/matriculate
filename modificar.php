@@ -138,7 +138,7 @@ try {
 										<?php echo $selector ?>
 										<input type='hidden' name='<?= $hiddenTabla ?>Txt'>
 									<?php endif; ?>
-									<button type="submit" class="btn btn-success">Modificar</button>
+									<button type="submit" class="btn btn-success">Seleccionar</button>
 								</form>
 							<?php endif; ?>
 						</aside>

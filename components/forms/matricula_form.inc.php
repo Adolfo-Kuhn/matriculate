@@ -14,7 +14,7 @@
 		<input type="number" class="form-control" id='nota' name='nota' min='0' max='10' step='0.01'>
 	</div>
 	<div class='form-group col-5 btn-submit'>
-		<input type="submit" class="btn btn-info" value='Aceptar'>
+		<input type="submit" class="btn btn-info" value='Insertar'>
 	</div>
 	<input type='hidden' name='formulario' value='Matrícula'>
 </form>

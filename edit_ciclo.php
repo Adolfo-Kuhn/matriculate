@@ -52,7 +52,7 @@ try {
 		$conexion->close();
 	}
 	$tabla = 'Ciclo';
-	$selector = obtenerLabeledSelect('ciclo', 'Ciclo', SQL_CREAR_ASIGNATURA_1);
+	$selector = obtenerLabeledSelect('ciclo', 'Ciclo', SQL_CREAR_ASIGNATURA_1, $ciclo);
 	$action = './edit_ciclo.php';
 } catch (Exception $e) {
 	$exc = getAlertElement($e, 'danger');
@@ -112,7 +112,7 @@ try {
 									<?php else: ?>
 										<input type='hidden' name='cicloTxt'>
 									<?php endif; ?>
-									<button type="submit" class="btn btn-success">Modificar</button>
+									<button type="submit" class="btn btn-success">Seleccionar</button>
 									<input type='hidden' name='tabla' value="<?= $tabla ?>">
 								</form>
 							<?php endif; ?>
@@ -129,7 +129,7 @@ try {
 						<form class='new-form' name="edit-ciclo" action="edit_ciclo.php" method="POST">
 							<div class="form-group col-5">
 								<label for="nombre">Nombre</label>
-								<input type="text" class="form-control" id="nombre" name="nombre" value='<?= $nombre ?>'>
+								<input type="text" class="form-control" id="nombre" name="nombre" value='<?= ucwords(strtolower($nombre)) ?>'>
 							</div>
 							<div class="form-group col-5">
 								<label for="siglas">Siglas</label>
@@ -140,7 +140,7 @@ try {
 								<input type="url" class="form-control" id="url" name='url' value='<?= $url ?>'>
 							</div>
 							<div class='form-group col-5 btn-submit'>
-								<input type="submit" class="btn btn-info" value='Aceptar'>
+								<input type="submit" class="btn btn-warning" value='Modificar'>
 							</div>
 							<input type='hidden' name='formulario' value='<?= $ciclo ?>'>
 						</form>

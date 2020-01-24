@@ -24,7 +24,6 @@ try {
 				$listado = crearCuerpoTabla(CABECERAS_CICLO, SQL_LEER_CICLO);
 				break;
 			case 'matrícula':
-				$matricula = true;
 				if (isset($_POST['asignatura'])) {
 					if ($_POST['asignatura'] > 0) {
 						$asignatura = $_POST['asignatura'];

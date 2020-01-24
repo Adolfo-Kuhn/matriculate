@@ -3,27 +3,27 @@ require_once './data/funciones.inc.php';
 require_once './data/data.php';
 require_once './data/data_sql.php';
 
-$tabla=null;
+$tabla = null;
 try {
 	session_start();
 
 	if (!isset($_SESSION['user'])) {
 		header('location: index.php');
 	} else {
-		$user=$_SESSION['user'];
-		$tabla='Asignatura';
+		$user = $_SESSION['user'];
+		$tabla = 'Asignatura';
 	}
 	if (isset($_REQUEST['asignatura'])) {
 		if (strcmp($_POST['asignatura'], '-') !== 0) {
-			$asignatura=$_POST['asignatura'];
-			$conexion=conectarBD();
-			$consulta=$conexion->stmt_init();
+			$asignatura = $_POST['asignatura'];
+			$conexion = conectarBD();
+			$consulta = $conexion->stmt_init();
 			$consulta->prepare(SQL_DELASIGNATURA_1);
 			$consulta->bind_param('i', $asignatura);
 			$consulta->execute();
 			$consulta->bind_result($nombre, $siglas, $horas, $profe, $ciclo, $curso, $anio, $url);
 			$consulta->fetch();
-			$asignaturaTxt=$nombre;
+			$asignaturaTxt = ucwords(strtolower($nombre));
 			$consulta->prepare(SQL_NOMBRE_CICLO);
 			$consulta->bind_param('i', $ciclo);
 			$consulta->execute();
@@ -37,31 +37,31 @@ try {
 			$consulta->close();
 			$conexion->close();
 		} else {
-			$asignatura='-';
-			$respuesta=getAlertElement('Es necesario que seleccione un ciclo para eliminar.', 'warning');
+			$asignatura = '-';
+			$respuesta = getAlertElement('Es necesario que seleccione un ciclo para eliminar.', 'warning');
 		}
 	}
 	if (isset($_REQUEST['formulario'])) {
-		$asignatura=$_POST['asignatura'];
-		$conexion=conectarBD();
-		$consulta=$conexion->stmt_init();
+		$asignatura = $_POST['asignatura'];
+		$conexion = conectarBD();
+		$consulta = $conexion->stmt_init();
 		$consulta->prepare(SQL_DELASIGNATURA_2);
 		$consulta->bind_param('i', $asignatura);
 		// se ejecuta la sentencia SQL y se muestra mensaje de éxito o fallo
 		if ($consulta->execute()) {
-			$msg='<strong>¡Eliminación exitosa!</strong> el registro se borró correctamente';
-			$respuesta=getAlertElement($msg, 'success');
+			$msg = '<strong>¡Eliminación exitosa!</strong> el registro se borró correctamente';
+			$respuesta = getAlertElement($msg, 'success');
 		} else {
-			$msg="<strong>¡Eliminación fallida!</strong> {$conexion->errno} - {$conexion->error}";
-			$respuesta=getAlertElement($msg, 'warning');
+			$msg = "<strong>¡Eliminación fallida!</strong> {$conexion->errno} - {$conexion->error}";
+			$respuesta = getAlertElement($msg, 'warning');
 		}
 		$consulta->close();
 		$conexion->close();
 	}
-	$selector=obtenerLabeledSelect('asignatura', 'Asignatura', SQL_LEER_ASIGNATURA_1);
-	$action='./del_asignatura.php';
+	$selector = obtenerLabeledSelect('asignatura', 'Asignatura', SQL_LEER_ASIGNATURA_1, $asignatura);
+	$action = './del_asignatura.php';
 } catch (Exception $e) {
-	$exc=getAlertElement($e, 'danger');
+	$exc = getAlertElement($e, 'danger');
 }
 ?>
 <!DOCTYPE html>
@@ -94,9 +94,13 @@ try {
 					<header class='form-header'>
 						<ol class="breadcrumb">
 							<li class="breadcrumb-item">Eliminar</li>
-							<li class="breadcrumb-item active">Asignatura</li>
 							<?php if (isset($asignaturaTxt)): ?>
-								<li class="breadcrumb-item active"><?= $asignaturaTxt ?></li>
+								<?php if (strcasecmp($asignaturaTxt, '-') !== 0): ?>
+									<li class="breadcrumb-item">Asignatura</li>
+									<li class="breadcrumb-item active"><?= $asignaturaTxt ?></li>
+								<?php endif; ?>
+							<?php else: ?>
+								<li class="breadcrumb-item active">Asignatura</li>
 							<?php endif; ?>
 						</ol>
 						<aside class='container'>
@@ -117,7 +121,7 @@ try {
 									<?php else: ?>
 										<input type='hidden' name='asignaturaTxt'>
 									<?php endif; ?>
-									<button type="submit" class="btn btn-success">Eliminar</button>
+									<button type="submit" class="btn btn-success">Seleccionar</button>
 									<input type='hidden' name='tabla' value="Asignatura">
 								</form>
 							<?php endif; ?>
@@ -143,7 +147,7 @@ try {
 							</div>
 							<div class="form-group col-5">
 								<label for="ciclo">Ciclo Formativo</label>
-								<input type="text" class="form-control" id="ciclo" value="<?= $nombreCiclo ?>" readonly>
+								<input type="text" class="form-control" id="ciclo" value="<?= ucwords(strtolower($nombreCiclo)) ?>" readonly>
 							</div>
 							<div class="form-group col-5">
 								<label for="curso">Curso</label>
@@ -166,7 +170,7 @@ try {
 								<input type="text" class="form-control" id="url" value='<?= $url ?>' readonly>
 							</div>
 							<div class='form-group col-5 btn-submit'>
-								<input type="submit" class="btn btn-info" value='Aceptar'>
+								<input type="submit" class="btn btn-danger" value='Eliminar'>
 							</div>
 							<input type='hidden' name='formulario' value='Ciclo'>
 						</form>

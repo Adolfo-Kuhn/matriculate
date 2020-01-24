@@ -53,7 +53,7 @@ try {
 		$conexion->close();
 	}
 	$tabla = 'Profesor';
-	$selector = obtenerLabeledSelect('profesor', 'Profesor', SQL_CREAR_ASIGNATURA_2);
+	$selector = obtenerLabeledSelect('profesor', 'Profesor', SQL_CREAR_ASIGNATURA_2, $profesor);
 	$action = './edit_profesor.php';
 } catch (Exception $e) {
 	$exc = getAlertElement($e, 'danger');
@@ -89,7 +89,7 @@ try {
 					<header class='form-header'>
 						<ol class="breadcrumb">
 							<li class="breadcrumb-item">Modificar</li>
-							<li class="breadcrumb-item">Alumno</li>
+							<li class="breadcrumb-item">Profesor</li>
 							<?php if (isset($profesorTxt)): ?>
 								<li class="breadcrumb-item active"><?= $profesorTxt ?></li>
 							<?php endif; ?>
@@ -113,7 +113,7 @@ try {
 									<?php else: ?>
 										<input type='hidden' name='profesorTxt'>
 									<?php endif; ?>
-									<button type="submit" class="btn btn-success">Modificar</button>
+									<button type="submit" class="btn btn-success">Seleccionar</button>
 									<input type='hidden' name='tabla' value="<?= $tabla ?>">
 								</form>
 							<?php endif; ?>
@@ -157,7 +157,7 @@ try {
 								</select>
 							</div>
 							<div class='form-group col-5 btn-submit'>
-								<input type="submit" class="btn btn-info" value='Aceptar'>
+								<input type="submit" class="btn btn-warning" value='Modificar'>
 							</div>
 							<input type='hidden' name='formulario' value='<?= $profesor ?>'>
 						</form>

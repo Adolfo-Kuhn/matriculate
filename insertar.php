@@ -68,7 +68,7 @@ try {
 					$respuesta = getAlertElement('<strong>Registro almacenado correctamente</strong>', 'success');
 				} else {
 					if ($consulta->errno) {
-						$respuesta = getAlertlement("<strong>El registro no pudo almacenarse</strong> $consulta->errno - $consulta->error", 'warning');
+						$respuesta = getAlertElement("<strong>El registro no pudo almacenarse</strong> $consulta->errno - $consulta->error", 'warning');
 					}
 				}
 				$consulta->close();
@@ -141,14 +141,21 @@ try {
 				<article class='screen'>
 					<header class='form-header'>
 						<ol class="breadcrumb">
-							<?php echo obtenerBreadcrum('Insertar', $tabla); ?>
+							<?php if (isset($tabla)): ?>
+								<li class="breadcrumb-item">Insertar</li>
+								<?php if (strcasecmp($tabla, 'seleccione registro...') !== 0): ?>
+									<li class="breadcrumb-item active"><?= $tabla ?></li>
+								<?php endif; ?>
+							<?php else: ?>
+								<li class="breadcrumb-item active">Insertar</li>
+							<?php endif; ?>
 						</ol>
 						<aside class='container'>
 							<form class='selector-box mb-3' name='consulta' action='insertar.php' method='POST'>
 								<div class="input-group col-5">
 									<?php include_once './components/selec-tabla.inc.php'; ?>
 									<div class="input-group-append">
-										<label class="input-group-text" for="selec-tabla">Inserción</label>
+										<label class="input-group-text" for="selec-tabla">Creación</label>
 									</div>
 								</div>
 								<button type="submit" class="btn btn-success">Seleccionar</button>

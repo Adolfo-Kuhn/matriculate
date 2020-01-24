@@ -53,7 +53,7 @@ try {
 		$conexion->close();
 	}
 	$tabla = 'Alumno';
-	$selector = obtenerLabeledSelect('alumno', 'Alumno', SQL_BORRAR_MATRICULA_1);
+	$selector = obtenerLabeledSelect('alumno', 'Alumno', SQL_BORRAR_MATRICULA_1, $alumno);
 	$action = './edit_alumno.php';
 } catch (Exception $e) {
 	$exc = getAlertElement($e, 'danger');
@@ -89,9 +89,13 @@ try {
 					<header class='form-header'>
 						<ol class="breadcrumb">
 							<li class="breadcrumb-item">Modificar</li>
-							<li class="breadcrumb-item">Alumno</li>
 							<?php if (isset($alumnoTxt)): ?>
-								<li class="breadcrumb-item active"><?= $alumnoTxt ?></li>
+								<?php if (strcasecmp($alumno, '-') !== 0): ?>
+									<li class="breadcrumb-item">Alumno</li>
+									<li class="breadcrumb-item active"><?= $alumnoTxt ?></li>
+								<?php else: ?>
+									<li class="breadcrumb-item active">Alumno</li>
+								<?php endif; ?>
 							<?php endif; ?>
 						</ol>
 						<aside class='container'>
@@ -112,7 +116,7 @@ try {
 									<?php else: ?>
 										<input type='hidden' name='alumnoTxt'>
 									<?php endif; ?>
-									<button type="submit" class="btn btn-success">Modificar</button>
+									<button type="submit" class="btn btn-success">Seleccionar</button>
 									<input type='hidden' name='tabla' value="<?= $tabla ?>">
 								</form>
 							<?php endif; ?>
@@ -156,7 +160,7 @@ try {
 								</select>
 							</div>
 							<div class='form-group col-5 btn-submit'>
-								<input type="submit" class="btn btn-info" value='Aceptar'>
+								<input type="submit" class="btn btn-warning" value='Modificar'>
 							</div>
 							<input type='hidden' name='formulario' value='Alumno'>
 						</form>

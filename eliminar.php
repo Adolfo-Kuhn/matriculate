@@ -106,7 +106,7 @@ try {
 								<div class="input-group col-5">
 									<?php include_once './components/selec-tabla.inc.php'; ?>
 									<div class="input-group-append">
-										<label class="input-group-text" for="selec-tabla">Eliminación</label>
+										<label class="input-group-text" for="selec-tabla">Borrado</label>
 									</div>
 								</div>
 								<button type="submit" class="btn btn-success">Seleccionar</button>
@@ -137,7 +137,7 @@ try {
 										<?php echo $selector ?>
 										<input type='hidden' name='<?= $hiddenTabla ?>Txt'>
 									<?php endif; ?>
-									<button type="submit" class="btn btn-success">Eliminar</button>
+									<button type="submit" class="btn btn-success">Seleccionar</button>
 								</form>
 							<?php endif; ?>
 						</aside>

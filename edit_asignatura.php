@@ -16,7 +16,7 @@ try {
 	if (isset($_REQUEST['asignatura'])) {
 		if (strcmp($_POST['asignatura'], '-') !== 0) {
 			$asignatura = $_POST['asignatura'];
-			$asignturaTxt = $_POST['asignaturaTxt'];
+			$asignaturaTxt = $_POST['asignaturaTxt'];
 			$conexion = conectarBD();
 			$consulta = $conexion->stmt_init();
 			$consulta->prepare(SQL_MODASIGNATURA_1);
@@ -65,7 +65,7 @@ try {
 		$conexion->close();
 	}
 	$tabla = 'Asignatura';
-	$selector = obtenerLabeledSelect('asignatura', 'Asignatura', SQL_LEER_ASIGNATURA_1);
+	$selector = obtenerLabeledSelect('asignatura', 'Asignatura', SQL_LEER_ASIGNATURA_1, $asignatura);
 	$selCiclo = obtenerSelect('ciclo', 'Ciclo Formativo', SQL_CREAR_ASIGNATURA_1, $ciclo);
 	$selProfe = obtenerSelect('profesor', 'Profesor', SQL_CREAR_ASIGNATURA_2, $dni);
 	$action = './edit_asignatura.php';
@@ -103,9 +103,13 @@ try {
 					<header class='form-header'>
 						<ol class="breadcrumb">
 							<li class="breadcrumb-item">Modificar</li>
-							<li class="breadcrumb-item">Asignatura</li>
 							<?php if (isset($asignaturaTxt)): ?>
-								<li class="breadcrumb-item active"><?= $asignaturaTxt ?></li>
+								<?php if (strcasecmp($asignaturaTxt, '-') !== 0): ?>
+									<li class="breadcrumb-item">Asignatura</li>
+									<li class="breadcrumb-item active"><?= $asignaturaTxt ?></li>
+								<?php endif; ?>
+							<?php else: ?>
+								<li class="breadcrumb-item active">Asignatura</li>
 							<?php endif; ?>
 						</ol>
 						<aside class='container'>
@@ -127,7 +131,7 @@ try {
 									<?php else: ?>
 										<input type='hidden' name='asignaturaTxt'>
 									<?php endif; ?>
-									<button type="submit" class="btn btn-success">Modificar</button>
+									<button type="submit" class="btn btn-success">Seleccionar</button>
 									<input type='hidden' name='tabla' value="<?= $tabla ?>">
 								</form>
 							<?php endif; ?>
@@ -144,7 +148,7 @@ try {
 						<form class='new-form' name="edit-asignatura" action="edit_asignatura.php" method="POST">
 							<div class="form-group col-5">
 								<label for="nombre">Nombre</label>
-								<input type="text" class="form-control" id="nombre" name="nombre" value='<?= $datos['nombre'] ?>'>
+								<input type="text" class="form-control" id="nombre" name="nombre" value='<?= ucwords(strtolower($datos['nombre'])) ?>'>
 							</div>
 							<div class="form-group col-5">
 								<label for="siglas">Siglas</label>
@@ -177,9 +181,9 @@ try {
 								<input type="url" class="form-control" id='url' name='url' value='<?= $datos['url'] ?>'>
 							</div>
 							<div class='form-group col-5 btn-submit'>
-								<input type="submit" class="btn btn-info" value='Aceptar'>
+								<input type="submit" class="btn btn-warning" value='Modificar'>
 							</div>
-							<input type='hidden' name='formulario' value='<?= $asignatura ?>'>
+							<input type='hidden' name='formulario' value='Asignatura'>
 						</form>
 					</main>
 				</article>

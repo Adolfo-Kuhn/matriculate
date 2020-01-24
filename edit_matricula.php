@@ -108,7 +108,7 @@ try {
 							<?php if (isset($selector)): ?>
 								<form class='selector-box mb-3' name="<?= 'edit-' . $tabla ?>" action="modificar.php" method='POST'>
 									<?= $selector; ?>
-									<button type="submit" class="btn btn-success">Modificar</button>
+									<button type="submit" class="btn btn-success">Seleccionar</button>
 								</form>
 							<?php endif; ?>
 						</aside>
@@ -154,7 +154,7 @@ try {
 								<input type="number" class="form-control" id='nota' name='nota' min='0' max='10' step='0.01'>
 							</div>
 							<div class='form-group col-5 btn-submit'>
-								<input type="submit" class="btn btn-info" name="mod_mat_info" value='Aceptar'>
+								<input type="submit" class="btn btn-warning" name="mod_mat_info" value='Modificar'>
 							</div>
 						</form>
 					</main>

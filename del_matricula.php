@@ -57,7 +57,7 @@ try {
 		$consulta->close();
 		$conexion->close();
 	}
-	$selector = obtenerLabeledSelect('alumno_mat', 'Alumno', SQL_MODMATRICULA_ALUMNOS);
+	$selector = obtenerLabeledSelect('alumno_mat', 'Alumno', SQL_MODMATRICULA_ALUMNOS, $alumno);
 	$action = 'eliminar.php';
 } catch (Exception $e) {
 	$exc = getAlertElement($e, 'danger');
@@ -123,7 +123,7 @@ try {
 									<?php else: ?>
 										<input type='hidden' name='alumnoTxt'>
 									<?php endif; ?>
-									<button type="submit" class="btn btn-success">Eliminar</button>
+									<button type="submit" class="btn btn-success">Seleccionar</button>
 									<input type='hidden' name='tabla' value="Matrícula">
 								</form>
 							<?php endif; ?>
@@ -161,7 +161,7 @@ try {
 								<input type="number" class="form-control" id='nota' name='nota' value="<?= $notaFinal ?>" readonly>
 							</div>
 							<div class='form-group col-5 btn-submit'>
-								<input type="submit" class="btn btn-info" value='Aceptar'>
+								<input type="submit" class="btn btn-danger" value='Eliminar'>
 							</div>
 							<input type='hidden' name='formulario' value='Matrícula'>
 						</form>
